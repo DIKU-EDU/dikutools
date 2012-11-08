@@ -1,8 +1,8 @@
-# Tools for working with Absalon
+# Tools for making life at DIKU easier
 
-This is a collection of useful scripts for dealing with
-[Absalon](http://absalon.itslearning.com) and it's learning.
+This is a collection of useful things for instructors and other
+people studying or working at DIKU.
 
-## Tools in collection
+## Collections
 
-* **download_assignments** - batch downloading of assignments from Absalon
+* **absalon** - tools for working efficiently with Absalon
