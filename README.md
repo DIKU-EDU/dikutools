@@ -6,3 +6,4 @@ people studying or working at DIKU.
 ## Collections
 
 * **absalon** - tools for working efficiently with Absalon
+* **courses** - tools used on different courses

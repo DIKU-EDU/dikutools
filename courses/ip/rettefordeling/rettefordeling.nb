@@ -1,0 +1,459 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     17092,        450]
+NotebookOptionsPosition[     15993,        409]
+NotebookOutlinePosition[     16362,        425]
+CellTagsIndexPosition[     16319,        422]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Prerequisites", "Subsubsection",
+ CellChangeTimes->{{3.5614793214936647`*^9, 3.561479324953862*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.5614793266859617`*^9, 3.561479331530239*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Mapping fra folk til hold :", "Subsubsection",
+ CellChangeTimes->{{3.5295786767941*^9, 3.529578689642994*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"hold", "=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"data", "=", 
+        RowBox[{"Import", "[", 
+         RowBox[{"\"\<studerende-raw.txt\>\"", ",", "\"\<TSV\>\"", ",", 
+          RowBox[{"CharacterEncoding", "\[Rule]", "\"\<UTF-8\>\""}]}], 
+         "]"}]}], ","}], "\[IndentingNewLine]", "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"#", "[", 
+          RowBox[{"[", "2", "]"}], "]"}], ",", 
+         RowBox[{"FromDigits", "@", 
+          RowBox[{
+           RowBox[{"StringCases", "[", 
+            RowBox[{
+             RowBox[{"#", "[", 
+              RowBox[{"[", "4", "]"}], "]"}], ",", 
+             RowBox[{
+              RowBox[{
+              "\"\<\[CapitalOSlash]vehold \>\"", " ", "~~", " ", "x_"}], 
+              "\[Rule]", "x"}]}], "]"}], "[", 
+           RowBox[{"[", "1", "]"}], "]"}]}]}], "}"}], "&"}], "/@", "data"}]}],
+     "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"holdNum", "[", "navn_", "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{"match", "=", 
+       RowBox[{"Select", "[", 
+        RowBox[{"hold", ",", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"#", "[", 
+            RowBox[{"[", "1", "]"}], "]"}], "\[Equal]", "navn"}], "&"}]}], 
+        "]"}]}], "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Length", "[", "match", "]"}], "\[NotEqual]", "1"}], ",", 
+       RowBox[{"Print", "[", 
+        RowBox[{"\"\<Fejl: Kan ikke finde \>\"", ",", "navn"}], "]"}], ",", 
+       RowBox[{"match", "[", 
+        RowBox[{"[", 
+         RowBox[{"1", ",", "2"}], "]"}], "]"}]}], "]"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.529578650133515*^9, 3.52957865206522*^9}, {
+   3.5295792243161335`*^9, 3.529579237559865*^9}, {3.5295792939566035`*^9, 
+   3.5295793051456137`*^9}, {3.529579346609869*^9, 3.5295794694315042`*^9}, {
+   3.5295795101413193`*^9, 3.529579513704316*^9}, {3.529579560246003*^9, 
+   3.5295796073259706`*^9}, {3.561478959098937*^9, 3.5614789753778677`*^9}, {
+   3.561479119214095*^9, 3.5614791291646643`*^9}, {3.561479337752595*^9, 
+   3.5614793620349836`*^9}, {3.5614795502497487`*^9, 3.561479592164146*^9}, {
+   3.561479768432228*^9, 3.5614797975068913`*^9}, {3.5614798326369004`*^9, 
+   3.5614798374341745`*^9}, {3.561479873295226*^9, 3.561480003409668*^9}, {
+   3.561480033758404*^9, 3.561480081040108*^9}, 3.561481948468919*^9}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Liste over folk der afleverede", "Subsubsection",
+ CellChangeTimes->{{3.5295791625644426`*^9, 3.529579175826171*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"hentAflNavne", "[", "f_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"#", "[", 
+      RowBox[{"[", "2", "]"}], "]"}], "&"}], "/@", 
+    RowBox[{"Import", "[", 
+     RowBox[{"f", ",", "\"\<TSV\>\"", ",", 
+      RowBox[{"CharacterEncoding", "\[Rule]", "\"\<UTF-8\>\""}]}], "]"}]}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.5614805161779966`*^9, 3.561480579666628*^9}, {
+  3.561480762531087*^9, 3.5614807761408653`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"afl", "=", 
+   RowBox[{"Union", "[", 
+    RowBox[{"hentAflNavne", "[", "\"\<afleveringer.txt\>\"", "]"}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.5295792033992434`*^9, 3.5295792053207417`*^9}, {
+   3.529579668255273*^9, 3.529579669109111*^9}, {3.5295814003940444`*^9, 
+   3.529581412330516*^9}, 3.5614805042283134`*^9, {3.5614807830972633`*^9, 
+   3.5614808793377686`*^9}, {3.5615340663776627`*^9, 
+   3.5615340746321344`*^9}, {3.5617933391752744`*^9, 3.561793346880715*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Navne p\[ARing] instruktorer", "Subsubsection",
+ CellChangeTimes->{{3.52958089853558*^9, 3.5295809097663774`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"instruktorNavn", "[", "n_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<Oleksandr Shturmov\>\"", ",", " ", "\"\<Simon Shine\>\"", ",", " ", 
+      "\"\<Markus Lund Wittorf\>\"", ",", "\"\<Davy Eskildsen\>\"", ",", " ", 
+      "\"\<Kristoffer S\[OSlash]holm\>\"", ",", "\"\<Jonas Brunsgaard\>\"", 
+      ",", "\"\<Mikkel Kragh Mathiesen\>\"", ",", "\"\<Philip Munksgaard\>\"",
+       ",", " ", "\"\<Sebastian Paaske T\[OSlash]rholm\>\"", ",", " ", 
+      "\"\<Troels Henriksen\>\""}], "}"}], "[", 
+    RowBox[{"[", 
+     RowBox[{"n", "+", "1"}], "]"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.5295809138716125`*^9, 3.529581007558874*^9}, {
+  3.5614801164011307`*^9, 3.561480116477135*^9}, {3.5614801555363693`*^9, 
+  3.561480217173895*^9}, {3.5614816041382246`*^9, 3.561481606908383*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Lav fordelingen", "Subsubsection",
+ CellChangeTimes->{{3.5295786970230064`*^9, 3.5295787190718064`*^9}, {
+  3.5615339170701227`*^9, 3.561533919112239*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"doIt", "[", "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"holdNumre", "=", 
+        RowBox[{"RandomSample", "@", 
+         RowBox[{"Range", "[", 
+          RowBox[{"0", ",", "9"}], "]"}]}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"afleverede", "=", 
+        RowBox[{"RandomSample", "@", "afl"}]}], ",", "\[IndentingNewLine]", 
+       "i", ",", "\[IndentingNewLine]", "prInstruktor", ",", 
+       "\[IndentingNewLine]", "enEkstra", ",", "\[IndentingNewLine]", 
+       "retterDenne", ",", "\[IndentingNewLine]", 
+       RowBox[{"res", "=", 
+        RowBox[{"{", "}"}]}]}], "\[IndentingNewLine]", "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"prInstruktor", "=", 
+       RowBox[{"Quotient", "[", 
+        RowBox[{
+         RowBox[{"Length", "@", "afl"}], ",", "10"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"enEkstra", "=", 
+       RowBox[{"Mod", "[", 
+        RowBox[{
+         RowBox[{"Length", "@", "afl"}], ",", "10"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"i", "=", "1"}], ",", 
+        RowBox[{"i", "\[LessEqual]", "10"}], ",", 
+        RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"retterDenne", "=", 
+          RowBox[{"Select", "[", 
+           RowBox[{"afleverede", ",", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"holdNum", "@", "#"}], "\[NotEqual]", 
+              RowBox[{"holdNumre", "[", 
+               RowBox[{"[", "i", "]"}], "]"}]}], "&"}], ",", 
+            RowBox[{"prInstruktor", "+", 
+             RowBox[{"Boole", "[", 
+              RowBox[{"i", "\[LessEqual]", "enEkstra"}], "]"}]}]}], "]"}]}], 
+         ";", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Length", "@", "retterDenne"}], "<", 
+            RowBox[{"prInstruktor", "+", 
+             RowBox[{"Boole", "[", 
+              RowBox[{"i", "\[LessEqual]", "enEkstra"}], "]"}]}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"i", "\[Equal]", "10"}], ",", 
+             RowBox[{"Return", "[", 
+              RowBox[{"doIt", "[", "]"}], "]"}], ",", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"afleverede", "=", 
+               RowBox[{"RandomSample", "@", "afleverede"}]}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"i", "-=", "1"}]}]}], "]"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"AppendTo", "[", 
+             RowBox[{"res", ",", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"holdNumre", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}], ",", "retterDenne"}], 
+               "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+            RowBox[{"afleverede", "=", 
+             RowBox[{"RandomSample", "@", 
+              RowBox[{"Complement", "[", 
+               RowBox[{"afleverede", ",", "retterDenne"}], "]"}]}]}], ";"}]}],
+           "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+      ";", "\[IndentingNewLine]", "res"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.5295797659197288`*^9, 3.5295797775163155`*^9}, {
+   3.5295798360832596`*^9, 3.5295798858324337`*^9}, {3.5295799204891596`*^9, 
+   3.5295802429799523`*^9}, {3.5295803223310885`*^9, 
+   3.5295803633264847`*^9}, {3.5295810694268475`*^9, 3.529581071191737*^9}, {
+   3.561479046477935*^9, 3.5614790499731345`*^9}, {3.56148090996452*^9, 
+   3.5614809353939743`*^9}, 3.5614809920092125`*^9, {3.5614811969459343`*^9, 
+   3.561481198954049*^9}, {3.561481308714327*^9, 3.5614813485626063`*^9}, {
+   3.5614814202047043`*^9, 3.5614814213537693`*^9}, 3.561481462219107*^9, {
+   3.561534014985723*^9, 3.5615340190169535`*^9}, {3.561534179045107*^9, 
+   3.5615342250807395`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"fordeling", "=", 
+   RowBox[{"doIt", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fordeling", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Sort", "[", 
+      RowBox[{"#", "[", 
+       RowBox[{"[", "2", "]"}], "]"}], "]"}], "&"}], "/@", 
+    RowBox[{"Sort", "[", 
+     RowBox[{"fordeling", ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"#1", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], "\[LessEqual]", 
+        RowBox[{"#2", "[", 
+         RowBox[{"[", "1", "]"}], "]"}]}], "&"}]}], "]"}]}]}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.529580365333396*^9, 3.5295803665874653`*^9}, {
+   3.5295804067730494`*^9, 3.5295804094082003`*^9}, {3.5295808287640557`*^9, 
+   3.529580829058073*^9}, {3.529581091659571*^9, 3.5295810965198493`*^9}, 
+   3.561480995707424*^9}],
+
+Cell[BoxData[
+ RowBox[{"For", "[", 
+  RowBox[{
+   RowBox[{"i", "=", "1"}], ",", 
+   RowBox[{"i", "\[LessEqual]", "10"}], ",", 
+   RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<== \>\"", ",", 
+      RowBox[{"instruktorNavn", "[", 
+       RowBox[{"i", "-", "1"}], "]"}], ",", "\"\< retter: ==\>\""}], "]"}], 
+    ";", "\[IndentingNewLine]", 
+    RowBox[{"Print", "[", "]"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"j", "=", "1"}], ",", 
+      RowBox[{"j", "\[LessEqual]", 
+       RowBox[{"Length", "[", 
+        RowBox[{"fordeling", "[", 
+         RowBox[{"[", "i", "]"}], "]"}], "]"}]}], ",", 
+      RowBox[{"j", "++"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Print", "[", 
+        RowBox[{"\"\<  * \>\"", ",", 
+         RowBox[{"fordeling", "[", 
+          RowBox[{"[", 
+           RowBox[{"i", ",", "j"}], "]"}], "]"}]}], "]"}], ";"}]}], 
+     "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"Print", "[", "]"}], ";"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.5614814271521015`*^9, 3.561481427621128*^9}, {
+  3.561481502417406*^9, 3.5614815392685137`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Saml opgaver til hver instruktor\
+\>", "Subsubsection",
+ CellChangeTimes->{{3.561533927747733*^9, 3.561533973251336*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"navnTilFilGlob", "[", "p_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{"StringReplace", "[", 
+     RowBox[{"p", ",", 
+      RowBox[{
+       RowBox[{"RegularExpression", "[", "\"\<[^\\\\w]+\>\"", "]"}], 
+       "\[Rule]", "\"\<_\>\""}]}], "]"}], "<>", "\"\<*\>\""}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.561534457893056*^9, 3.5615344713308244`*^9}, {
+  3.5615346094177227`*^9, 3.5615346564094105`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+      "opgaveMappe", "=", 
+       "\"\<../Alle opgaver/Eksamen_7_9_november_2012*/\>\""}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"outputMappe", "=", "\"\<./Instruktorer\>\""}], ",", 
+      "\[IndentingNewLine]", "instruktorMappe", ","}], "\[IndentingNewLine]", 
+     "}"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"DirectoryQ", "@", "outputMappe"}], ",", 
+       RowBox[{"DeleteDirectory", "[", 
+        RowBox[{"outputMappe", ",", 
+         RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}]}], "]"}], ";",
+      "\[IndentingNewLine]", 
+     RowBox[{"CreateDirectory", "[", "outputMappe", "]"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"i", "=", "1"}], ",", 
+       RowBox[{"i", "\[LessEqual]", "10"}], ",", 
+       RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"instruktorMappe", "=", 
+         RowBox[{"outputMappe", "<>", "\"\</\>\"", "<>", 
+          RowBox[{"instruktorNavn", "[", 
+           RowBox[{"i", "-", "1"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"CreateDirectory", "[", "instruktorMappe", "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"CopyDirectory", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"instruktorMappe", "<>", "\"\</\>\"", "<>", 
+             RowBox[{"FileBaseName", "[", "#", "]"}]}]}], "]"}], "&"}], "/@", 
+         RowBox[{"Flatten", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"FileNames", "[", 
+             RowBox[{"opgaveMappe", "<>", 
+              RowBox[{"navnTilFilGlob", "[", "#", "]"}]}], "]"}], "&"}], "/@", 
+           RowBox[{"fordeling", "[", 
+            RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], ";"}]}], 
+      "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.5615339896362734`*^9, 3.561533990656331*^9}, {
+   3.561534276207664*^9, 3.561534321463252*^9}, {3.561534406757131*^9, 
+   3.5615344554319153`*^9}, {3.5615346952886343`*^9, 
+   3.5615348939559975`*^9}, {3.561534952514346*^9, 3.56153500537437*^9}, {
+   3.5615350362741375`*^9, 3.561535080959693*^9}, {3.561535183045532*^9, 
+   3.5615352762738647`*^9}, {3.5615353162161493`*^9, 3.561535326314727*^9}, {
+   3.56153535854757*^9, 3.561535369813215*^9}, {3.561535438354135*^9, 
+   3.5615354460535755`*^9}, {3.561535476603323*^9, 3.561535481888625*^9}, {
+   3.5615355802222495`*^9, 3.561535647777113*^9}, {3.5615356799349527`*^9, 
+   3.5615357572103724`*^9}, {3.5615362883097496`*^9, 
+   3.5615363153542967`*^9}, {3.5615363766318016`*^9, 3.561536415643033*^9}, {
+   3.5615364495759735`*^9, 3.5615364497329826`*^9}, {3.5615365012919316`*^9, 
+   3.5615365102084417`*^9}, {3.5615365646155534`*^9, 3.561536678085044*^9}, 
+   3.5615367383154883`*^9, {3.561536817960044*^9, 3.561536831552821*^9}, 
+   3.5615368905991983`*^9}]
+}, Open  ]]
+},
+WindowSize->{708, 787},
+WindowMargins->{{0, Automatic}, {Automatic, 8}},
+CellLabelAutoDelete->True,
+FrontEndVersion->"8.0 for Microsoft Windows (32-bit) (November 7, 2010)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 106, 1, 27, "Subsubsection"],
+Cell[688, 25, 191, 4, 31, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[916, 34, 116, 1, 21, "Subsubsection"],
+Cell[1035, 37, 2711, 64, 212, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[3783, 106, 123, 1, 21, "Subsubsection"],
+Cell[3909, 109, 476, 13, 31, "Input"],
+Cell[4388, 124, 521, 10, 31, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4946, 139, 120, 1, 27, "Subsubsection"],
+Cell[5069, 142, 866, 17, 112, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[5972, 164, 161, 2, 21, "Subsubsection"],
+Cell[6136, 168, 4052, 91, 512, "Input"],
+Cell[10191, 261, 828, 23, 52, "Input"],
+Cell[11022, 286, 1232, 31, 172, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12291, 322, 131, 3, 27, "Subsubsection"],
+Cell[12425, 327, 450, 12, 31, "Input"],
+Cell[12878, 341, 3099, 65, 312, "Input"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
