@@ -7,3 +7,4 @@ people studying or working at DIKU.
 
 * **absalon** - tools for working efficiently with Absalon
 * **courses** - tools used on different courses
+* **intranet** - tools for working efficiently with KU's intranet (KUnet)
