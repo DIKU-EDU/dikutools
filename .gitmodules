@@ -1,0 +1,3 @@
+[submodule "internet/wpa-supplicant-eduroam"]
+	path = internet/wpa-supplicant-eduroam
+	url = git@github.com:oleks/wpa-supplicant-eduroam.git
