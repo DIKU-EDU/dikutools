@@ -35,6 +35,8 @@ my ($uristart) = $mech->response->content =~ qr{(ipp://webprint.science.ku.dk:63
 die("Login failed.\n") unless $uristart;
 
 print "Setting up UP1-2-0-02 (formerly m1b)...\n";
+# If your printer drivers are in a different location, you can try running this command to try to locate them:
+# /usr/sbin/lpinfo --make-and-model 'HP LaserJet 9040' -m 
 system("sudo /usr/sbin/lpadmin -p m1b -E -m postscript-hp:0/ppd/hplip/HP/hp-laserjet_9040_mfp-ps.ppd -L 'DIKU, UP1-2-0-02 (sort/hvid)' -v $uristart/AAB7DFC9}");
 print "You can now print to m1b using: lpr -P m1b <file>\n";
 print "Setting up UP1-2-0-02-b (formerly n2d)...\n";
