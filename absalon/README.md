@@ -5,4 +5,5 @@ This is a collection of useful scripts for dealing with
 
 ## Tools in collection
 
+* **assignment_data_json** - extraction of information about assignments to a JSON file
 * **download_assignments** - batch downloading of assignments from Absalon
