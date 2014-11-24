@@ -5,8 +5,5 @@ This is a collection of useful scripts for dealing with
 
 ## UserScripts:
 
-* **[Absalon Fag](https://userscripts.org/scripts/show/145684)** -
+* **[KUnet Absalon Fag](https://greasyfork.org/en/scripts/6638-kunet-absalon-fag)** -
     On KUnet landingpage, select and rename courses on the list of active Absalon courses
-
-* **[STADS cookie fix](https://userscripts.org/scripts/show/176027)** -
-    Skip the cookie error message when logging in to STADS self service
