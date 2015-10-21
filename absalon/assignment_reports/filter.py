@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 
-# 1. Download the HTML Assignment report(s).
-# 2. Call this script, specifying the threshold for acceptance.
-#    a. Modify the keyword below if necessary.
+# 1. Download the Assignment report HTML page(s).
+# 2. Call this script, specifying the keyword and threshold (how many times the
+#    keyword should occur for a student)
 
 # Prerequisites:
 # * python3 (it's about time!)
-# * beautifulsoup4 (install it using pip)
+# * beautifulsoup4 (install it using pip3)
 
 import sys
 
-keyword = "Tilfredsstillende"
-
-if len(sys.argv) < 3:
-  print("Usage: " + sys.argv[0] + " <threshold> <Assignment report.html>")
+if len(sys.argv) != 4:
+  print("Usage: " + sys.argv[0] +
+    " <keyword> <threshold> <Assignment report.html>")
   exit(2)
 
-threshold = int(sys.argv[1])
-report = sys.argv[2]
+keyword = str(sys.argv[1])
+threshold = int(sys.argv[2])
+report = sys.argv[3]
 
 from bs4 import BeautifulSoup
 
