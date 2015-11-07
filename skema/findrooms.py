@@ -44,7 +44,7 @@ end = toTime(sys.argv[5])
 with urllib.request.urlopen(JS_PATH) as resource:
   js = resource.read().decode(resource.headers.get_content_charset())
 
-def checkBuilding(building, rooms, ids):
+def findBigEnoughRoomsIn(building, rooms, ids):
 
   ROOMS_RE = re.compile(
     r"roomarray\[\d+\] \[0\] = \"((?:øv|aud) .*?\((\d+)\))\";\s+" +
@@ -60,13 +60,13 @@ def checkBuilding(building, rooms, ids):
     rooms.append(room)
     ids.append(match.group(3))
 
-def checkAll():
+def findBigEnoughRooms():
 
   rooms = []
   ids = []
 
   for building in BUILDINGS:
-    checkBuilding(building, rooms, ids)
+    findBigEnoughRoomsIn(building, rooms, ids)
 
   return rooms, ids
 
@@ -104,7 +104,7 @@ def checkRoom(table):
       return False
   return True
 
-rooms, ids = checkAll()
+rooms, ids = findBigEnoughRooms()
 
 ids = "&identifier=".join(ids)
 weeks = findWeeks()
