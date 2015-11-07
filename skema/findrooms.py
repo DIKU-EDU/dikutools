@@ -93,15 +93,23 @@ def getWeekdayIndex():
     raise Exception("Invalid weekday.")
 
 def checkRoom(table):
+
+# Cases:
+# start end o_start o_end
+# o_start o_end start end <- continue
+# start o_start end o_end
+# start o_start o_end end
+# o_start start o_end end
+
   for row in table.select("tr")[1:]:
-    occupied_start = toTime(row.select("td")[3].text)
-    occupied_end = toTime(row.select("td")[4].text)
-    if end <= occupied_start:
+    o_start = toTime(row.select("td")[3].text)
+    o_end = toTime(row.select("td")[4].text)
+    if end <= o_start:
       return True
-    if end <= occupied_end:
-      return False
-    if occupied_start >= start and occupied_end <= end:
-      return False
+    if o_end <= start:
+      continue
+    else:
+      return False # There's an overlay.
   return True
 
 rooms, ids = findBigEnoughRooms()
