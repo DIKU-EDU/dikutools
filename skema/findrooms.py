@@ -28,21 +28,10 @@ import urllib.request
 
 from bs4 import BeautifulSoup
 
+#### Helper functions
+
 def toTime(timestr):
   return time.strptime(timestr, "%H:%M")
-
-if len(sys.argv) < 6:
-  print("Usage: %s <n_people> <block> <weekday> <start> <end>" % sys.argv[0])
-  exit(2)
-
-n_people = int(sys.argv[1])
-block = int(sys.argv[2])
-weekday = sys.argv[3].lower()
-start = toTime(sys.argv[4])
-end = toTime(sys.argv[5])
-
-with urllib.request.urlopen(JS_PATH) as resource:
-  js = resource.read().decode(resource.headers.get_content_charset())
 
 def findBigEnoughRoomsIn(building, rooms, ids):
 
@@ -111,6 +100,21 @@ def checkRoom(table):
     else:
       return False # There's an overlay.
   return True
+
+#### Main
+
+if len(sys.argv) < 6:
+  print("Usage: %s <n_people> <block> <weekday> <start> <end>" % sys.argv[0])
+  exit(2)
+
+n_people = int(sys.argv[1])
+block = int(sys.argv[2])
+weekday = sys.argv[3].lower()
+start = toTime(sys.argv[4])
+end = toTime(sys.argv[5])
+
+with urllib.request.urlopen(JS_PATH) as resource:
+  js = resource.read().decode(resource.headers.get_content_charset())
 
 rooms, ids = findBigEnoughRooms()
 
