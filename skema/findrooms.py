@@ -14,7 +14,9 @@ BUILDINGS = [
   "Datalogisk Institut",
   "HCØ",
   "August Krogh",
-  "Biocenter"
+  "Biocenter",
+  "Rockefeller",
+  "Ifi - Institut for Idræt, Nørre Allé"
 ]
 
 STUDY_YEAR = "1516"
