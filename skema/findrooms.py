@@ -121,8 +121,8 @@ with urllib.request.urlopen(JS_PATH) as resource:
 rooms, ids = findBigEnoughRooms(n_people)
 
 ids = "&identifier=".join(ids)
-weeks = findWeeks(block)
 weekday = getWeekdayIndex(weekday)
+weeks = findWeeks(block)
 
 report_url = REPORT_PATH % (ids, weekday, weeks)
 
