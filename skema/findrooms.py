@@ -35,7 +35,7 @@ from bs4 import BeautifulSoup
 def toTime(timestr):
   return time.strptime(timestr, "%H:%M")
 
-def findBigEnoughRoomsIn(building, rooms, ids):
+def findBigEnoughRoomsIn(building, n_people, rooms, ids):
 
   ROOMS_RE = re.compile(
     r"roomarray\[\d+\] \[0\] = \"((?:øv|aud) .*?\((\d+)\))\";\s+" +
@@ -51,17 +51,17 @@ def findBigEnoughRoomsIn(building, rooms, ids):
     rooms.append(room)
     ids.append(match.group(3))
 
-def findBigEnoughRooms():
+def findBigEnoughRooms(n_people):
 
   rooms = []
   ids = []
 
   for building in BUILDINGS:
-    findBigEnoughRoomsIn(building, rooms, ids)
+    findBigEnoughRoomsIn(building, n_people, rooms, ids)
 
   return rooms, ids
 
-def findWeeks():
+def findWeeks(block):
   WEEKS_RE = re.compile(
     r"AddWeeks\(\"(.*?)\",\".*NAT Blok " + str(block) + r" - 7 uger .*\"")
 
@@ -69,7 +69,7 @@ def findWeeks():
 
   return match.group(1)
 
-def getWeekdayIndex():
+def getWeekdayIndex(weekday):
   if weekday == "mandag" or weekday == "monday":
     return 1
   elif weekday == "tirsdag" or weekday == "tuesday":
@@ -118,11 +118,11 @@ end = toTime(sys.argv[5])
 with urllib.request.urlopen(JS_PATH) as resource:
   js = resource.read().decode(resource.headers.get_content_charset())
 
-rooms, ids = findBigEnoughRooms()
+rooms, ids = findBigEnoughRooms(n_people)
 
 ids = "&identifier=".join(ids)
-weeks = findWeeks()
-weekday = getWeekdayIndex()
+weeks = findWeeks(block)
+weekday = getWeekdayIndex(weekday)
 
 report_url = REPORT_PATH % (ids, weekday, weeks)
 
