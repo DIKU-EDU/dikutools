@@ -86,7 +86,7 @@ def getWeekdayIndex(weekday):
 def checkRoom(table):
 
 # Cases:
-# start end o_start o_end
+# start end o_start o_end <- room is available
 # o_start o_end start end <- continue
 # start o_start end o_end
 # start o_start o_end end
@@ -131,6 +131,11 @@ with urllib.request.urlopen(report_url) as resource:
 
 soup = BeautifulSoup(html, 'html.parser')
 tables = soup.select(".spreadsheet")
+
+# The following loop depends on two crucial assumptions about the report
+# produced by skema.ku.dk: (1) rooms appear in the order given by the
+# identifier list, and (2) the occupation slots for each room appear in
+# chronological order.
 
 for i, table in enumerate(tables):
   if checkRoom(table):
