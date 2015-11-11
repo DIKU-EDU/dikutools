@@ -26,6 +26,6 @@ set -o allexport # All subsequent variables are exported to environment
 . "${CONFIG}"
 set +o allexport # Disable the above feature
 
-./stages/createdisk.sh
+./stages/createvdi.sh
 
 echo $DISK
