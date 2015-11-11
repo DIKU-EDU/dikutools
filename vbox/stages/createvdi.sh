@@ -4,11 +4,11 @@
 set -e # Exit on fail
 
 # Unregister disk if it is registered.
-vboxmanage list hdds | grep "$DISK" && \
-  vboxmanage closemedium disk "$DISK"
+vboxmanage list hdds | grep "$VDI_PATH" && \
+  vboxmanage closemedium disk "$VDI_PATH"
 
 # At any rate, remove it.
-rm -rf "$DISK"
+rm -rf "$VDI_PATH"
 
 # And create anew.
-vboxmanage createhd --filename "$DISK" --size "$DISKSIZE"
+vboxmanage createhd --filename "$VDI_PATH" --size "$VDI_SIZE"
