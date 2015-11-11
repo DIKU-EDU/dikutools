@@ -3,6 +3,8 @@
 
 set -e # Exit on fail
 
+VDI_PATH="$(realpath "$VDI_PATH")"
+
 # Unregister disk if it is registered.
 vboxmanage list hdds | grep "$VDI_PATH" && \
   vboxmanage closemedium disk "$VDI_PATH"
