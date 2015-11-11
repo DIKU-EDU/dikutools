@@ -10,6 +10,10 @@ Usage: $0 <config>
 EOF
 }
 
+function fail {
+  exit 1
+}
+
 if [ $# -lt 1 ] ; then
   showUsage
   exit $ERROR_INVALID_ARGS
@@ -26,6 +30,10 @@ set -o allexport # All subsequent variables are exported to environment
 . "${CONFIG}"
 set +o allexport # Disable the above feature
 
-./stages/createvdi.sh
+./stages/createvdi.sh || fail
 
-echo $DISK
+# Enter a private mount namespace, and make sure everything is finally
+# unmounted properly.
+#
+# See https://github.com/oleks/sandstone/blob/master/src/private-mntns.c
+unshare -m bash -c "mount --make-rprivate / && ./stages/mountvdi.sh"
