@@ -43,4 +43,4 @@ set +o allexport # Disable the above feature
 # unmounted properly.
 #
 # See https://github.com/oleks/sandstone/blob/master/src/private-mntns.c
-unshare -m bash -c "mount --make-rprivate / && ./stages/mountvdi.sh"
+unshare -m sh -c "mount --make-rprivate / && ./stages/mountvdi.sh"
