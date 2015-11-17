@@ -95,12 +95,19 @@ def checkRoom(table):
   for row in table.select("tr")[1:]:
     o_start = toTime(row.select("td")[3].text)
     o_end = toTime(row.select("td")[4].text)
+    #print(row.select("td")[3].text,row.select("td")[4].text)
+    if o_end == toTime("0:00"):
+      o_end = toTime("23:59")
     if end <= o_start:
+      #print("True")
       return True
     if o_end <= start:
+      #print("continue")
       continue
     else:
+      #print("False")
       return False # There's an overlay.
+  #print("True")
   return True
 
 #### Main
@@ -136,6 +143,8 @@ tables = soup.select(".spreadsheet")
 # produced by skema.ku.dk: (1) rooms appear in the order given by the
 # identifier list, and (2) the occupation slots for each room appear in
 # chronological order.
+
+# TODO: Assumption (2) is flawed!
 
 new_ids = []
 for i, table in enumerate(tables):
