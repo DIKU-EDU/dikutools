@@ -120,11 +120,11 @@ with urllib.request.urlopen(JS_PATH) as resource:
 
 rooms, ids = findBigEnoughRooms(n_people)
 
-ids = "&identifier=".join(ids)
+url_ids = "&identifier=".join(ids)
 weekday = getWeekdayIndex(weekday)
 weeks = findWeeks(block)
 
-report_url = REPORT_PATH % (ids, weekday, weeks)
+report_url = REPORT_PATH % (url_ids, weekday, weeks)
 
 with urllib.request.urlopen(report_url) as resource:
   html = resource.read().decode(resource.headers.get_content_charset())
@@ -137,6 +137,13 @@ tables = soup.select(".spreadsheet")
 # identifier list, and (2) the occupation slots for each room appear in
 # chronological order.
 
+new_ids = []
 for i, table in enumerate(tables):
   if checkRoom(table):
     print(rooms[i])
+    new_ids.append(ids[i])
+
+print("Double-check for yourself:")
+
+url_ids = "&identifier=".join(new_ids)
+print(REPORT_PATH % (url_ids, weekday, weeks))
