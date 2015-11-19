@@ -7,16 +7,16 @@ set -x
 # Check that the original VM actually exists
 vboxmanage showvminfo "$NAME" &> /dev/null
 
+set -o allexport
 VERNAME="${NAME}-v${VERSION}"
 OVA_PATH="${NAME}-v${VERSION}.ova"
+FULL_PATH="${VERNAME}/${VERNAME}"
+VDI_PATH="${FULL_PATH}.vdi"
+set +o allexport
 
 # Shut down the new VM if it already exists and is running:
 if vboxmanage list runningvms | grep "\"${VERNAME}\"" > /dev/null ; then
-  vboxmanage controlvm "${VERNAME}" acpipowerbutton
-
-  while vboxmanage list runningvms | grep "\"${VERNAME}\"" > /dev/null ; do 
-    sleep 30
-  done
+  ./stages/spindownvm.sh
 fi
 
 # Delete the VM if it already exists:
@@ -26,14 +26,12 @@ vboxmanage unregistervm "${VERNAME}" --delete &>/dev/null || true
 mkdir -p "${VERNAME}"
 rm -rf "${VERNAME}/*"
 
-FULL_PATH="${VERNAME}/${VERNAME}"
 
 CFG_PATH=$(vboxmanage showvminfo "$NAME" | grep "Config file" | \
   sed -E 's/Config file:\s*(.*?)$/\1/')
 HD_UUID=$(cat "${CFG_PATH}" | grep "HardDisk uuid" | \
   sed -E 's/.*uuid="\{(.*?)\}".*/\1/')
 
-VDI_PATH="${FULL_PATH}.vdi"
 
 # Remove the disk from the VirtualBox media registry, if it is there.
 vboxmanage closemedium "${VDI_PATH}" --delete &>/dev/null || true
@@ -71,11 +69,7 @@ VBoxManage modifyvm "${VERNAME}" \
   --natpf1 "ssh,tcp,,${SSH_HOST_PORT},,22"
 
 # Start the VM and scrub it!
-vboxmanage startvm "${VERNAME}" --type headless
-
-while ! vboxmanage list runningvms | grep "\"${VERNAME}\"" > /dev/null ; do 
-  sleep 30
-done
+./stages/spinupvm.sh
 
 sshpass -p "${PASSWD}" ssh -p ${SSH_HOST_PORT} \
   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
@@ -95,29 +89,11 @@ rm /tmp/zero
 shutdown -h now
 \""
 
-# Shut down the VM
-vboxmanage controlvm "${VERNAME}" acpipowerbutton
-
-while vboxmanage list runningvms | grep "\"${VERNAME}\"" > /dev/null ; do 
-  sleep 30
-done
+./stages/spindownvm.sh
 
 # Finally, compact the disk after the clean up:
 vboxmanage modifyhd "${VDI_PATH}" --compact
 
-rm -rf "${OVA_PATH}"
+./stages/exportova.sh
 
-# And export the OVA.
-vboxmanage export "${VERNAME}" \
-  --output "${OVA_PATH}" \
-  --vsys 0 \
-    --product "${LONG_NAME}" \
-    --description "${DESCRIPTION}" \
-    --version "${VERSION}" \
-    --vendor "DIKU" \
-    --vendorurl "http://www.diku.dk/"
-
-# Clean up
-vboxmanage unregistervm "${VERNAME}" --delete
-# ^^^ That should delete the disk from media manager as well.
-rm -rf "${VERNAME}"
+./stages/rmvm.sh
