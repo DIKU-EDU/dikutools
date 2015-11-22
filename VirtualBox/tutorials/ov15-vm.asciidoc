@@ -54,7 +54,7 @@ make sure that what you've downloaded is what we intended for you to download.
 The SHA256 checksum of our `ov15-v1.2.ova` is:
 
 ----
-259ed5880122bce1c8423866ed0dd156ee9662a7d12941d5ac9043b009014ea1
+487e7ce6b938e28efd07daffedccb9194bdc4d34ed5da6fb6330b778c950cc97
 ----
 
 ====
