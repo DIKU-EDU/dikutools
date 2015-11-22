@@ -58,6 +58,7 @@ vboxmanage modifyvm "${VERNAME}" --memory 512 --vram 128
 
 # Make it user-friendly
 vboxmanage modifyvm "${VERNAME}" --clipboard bidirectional
+vboxmanage modifyvm "${VERNAME}" --draganddrop bidirectional
 
 # Disable USB. Otherwise this might happen:
 # https://www.virtualbox.org/ticket/14469
