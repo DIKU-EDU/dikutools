@@ -14,6 +14,10 @@ sshpass -p "${PASSWD}" ssh -p ${SSH_HOST_PORT} \
   root@localhost "bash -c \"
 adduser \"${USER}\" vboxsf
 
+cd /home/${USER}/.wallpapers/
+rm *
+wget ${WALLPAPERS}
+
 rm -rf /var/cache/apt/*
 rm -rf /var/lib/apt/lists/*
 rm -rf /var/log/dpkg.log*
