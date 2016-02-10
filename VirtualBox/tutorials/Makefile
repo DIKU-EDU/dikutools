@@ -1,8 +1,8 @@
 .PHONY: clean all pdf
 
-all: ov15-vm.html
+all: ov15-vm.html osm16-vm.html
 
-pdf: ov15-vm.pdf
+pdf: ov15-vm.pdf osm16-vm.pdf
 
 %.html: %.asciidoc
 	asciidoctor $*.asciidoc

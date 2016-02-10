@@ -1,0 +1,215 @@
+= Tutorial: Getting started with the VirtualBox image
+OSM 2016 Course Team
+v1.0, February 8, 2016
+:doctype: article
+:backend: html5
+:docinfo:
+:sectanchors:
+:sectnums:
+:toc:
+
+To make it easier for you to get started with the tools that you need for this
+course, we've set up a VirtualBox image with all the tools that you will need.
+Follow this guide to get started with the VirtualBox image.
+
+=== The VirtualBox Image
+
+https://www.virtualbox.org/[Oracle VM VirtualBox] is a free software that can
+create, run, and monitor virtual machines (VMs). This sort of software is
+typically called a https://en.wikipedia.org/wiki/Hypervisor[hypervisor]. Go
+ahead and https://www.virtualbox.org/wiki/Downloads#VirtualBoxbinaries[install
+VirtualBox on your host operating system].
+
+[IMPORTANT]
+.Enable Hardware Virtualization
+====
+
+On most systems, "hardware virtualization" must first be enabled in the
+BIOS/UEFI configurations before VirtualBox can run effectively. Restart your
+computer, enter the BIOS/UEFI. Enable the "hardware virtualization" feature for
+your CPU. (This features is called VT-x on Intel, and AMD-V on AMD systems.)
+
+====
+
+We have prepared https://en.wikipedia.org/wiki/Open_Virtualization_Format[Open
+Virtual Appliance (OVA)] which you can _import_ in your VirtualBox.
+
+Use one of the following mirrors to download the appliance:
+
+* http://napoleon.hiperfit.dk/~oleks/osm16-v1.0.ova
+* http://harlem.dikurevy.dk/~oleks/osm16-v1.0.ova
+
+[TIP]
+.Checksums
+====
+
+A checksum is an almost unique alphanumeric code generated based on the
+contents of a file. A checksum is often used to check the integrity of a file.
+
+It is important to check the checksum the files you download over an insecure
+network (such as http), and from otherwise untrusted services. This way you can
+make sure that what you've downloaded is what we intended for you to download.
+
+The SHA256 checksum of our `osm16-v1.0.ova` is:
+
+----
+4eae1eeede356ca21951153c5af1ae06f289de033f6c5c3bfee6a3d47a031a04
+----
+
+====
+
+Once you have a good-looking `osm16-v1.0.ova`, and have VirtualBox
+installed:
+
+. Open up VirtualBox and choose File → Import Appliance.
+. Choose a virtual appliance to import: your `osm16-v1.0.ova`.
+. Press "Next" and "Import".
+
+You now have a virtual image "osm16-v1.0" in your left-hand sidebar. Select it
+and press "Start".
+
+[TIP]
+.Trouble starting the virtual machine? The virtual machine is sloooow?
+====
+
+If you are getting a warning like:
+
+____
+VT-x/AMD-V hardware acceleration is not available on your system.
+____
+
+You need to enable "hardware virtualization" in your BIOS/UEFI configurations.
+Restart your computer, enter the BIOS/UEFI. Enable the "hardware
+virtualization" feature for your CPU. (This features is called VT-x on Intel,
+and AMD-V on AMD systems.)
+
+====
+
+
+Welcome to Debian GNU/Linux:
+
+* Your hostname is "syracuse".
+* Your username is "archimedes".
+* Your (and the root) password is "hamster".
+
+The best place to start is to double-click the "Terminal - LXTerminal" icon.
+
+The prompt you'll be greeted with is canonical:
+
+----
+archimedes@syracuse:~$
+----
+
+Throughout the remainder of this course, we won't mention any archimedes at
+syracuse, and just state the working directory, when necessary.
+
+Happy hacking :-)
+
+=== Troubleshooting
+
+1. *Black background, no icons on the desktop.* This typically happens if you
+shut down the machine in an improper way, i.e. not using the graphical user
+interface.
+
+=== Working with Directories
+
+If you are completely new to working with Linux follow this short guide to get
+started with working with directories.
+
+Start up LXTerminal.
+
+Create a directory, `ov`, in our home (`~`) directory:
+
+----
+~$ mkdir ov
+----
+
+To change the current working directory, use the `cd` command:
+
+----
+~$ cd ov
+~/ov$ 
+----
+
+To go one level up in the directory structure, use `..` as the destination
+argument.
+
+----
+~/ov$ cd ..
+~$ 
+----
+
+We can use `ls` to list the contents of a directory:
+
+----
+~$ ls
+Desktop   opt   ov
+~$
+----
+
+=== Setting up Shared Folders
+
+If you find it obscure to work inside the VirtualBox, and instead want to use
+your favourite OS X, Windows, or FreeBSD editor, you can set up a shared folder
+between your host operating system and the guest virtual machine.
+
+1. Select the "osm16-v1.0.ova" image and press "Settings".
+
+2. Select the "Shared Folders" tab on the left-hand side of the popped up
+window.
+
+3. Click on the little folder with a plus on the right-hand side of the window
+to add a new Shared folder.
+
+4. Select a path on your host machine as the "Folder Path".
+
+5. To avoid a myriad of possible problems, let "Folder Name" be some name
+without spaces. For instance, "ov15-sf", standing for ov15 shared folder.
+
+6. Select "Auto-mount".
+
+7. Click "OK".
+
+8. (Re)start the virtual machine.
+
+9. You will find the folder you shared under `/media/sf_${NAME}`, where
+`${NAME}` with the "Folder Name" from before.
+
+10. Optional: To quickly find `/media/sf_${NAME}/` you might want to add a soft
+link to this folder from your Desktop.
+
+  a. Open LXTerminal.
+
+  b. Enter the command `ln -s /media/sf_${NAME}/ ~/Desktop/${NAME}`, where you
+should use the "Folder Name" from before in place of `${NAME}`.
+
+  c. Close LXTerminal, and check that the link has appeared on the desktop, and
+works.
+
+=== Working with the VM via SSH
+
+Working with a desktop environment can be cumbersome, especially if you already
+set up the shared folders above.
+
+You can start up the virtual machine in so-called "headless mode" i.e. without
+an interface with the desktop environment, and work with the virtual machine
+exclusively from the command line.
+
+If you are using the VirtualBox GUI to manage your virtual machine, hold down
+*Shift* when you press *Start* to start the virtual machine in headless mode.
+
+While the machine is running, you can use SSH (on Windows, you can use
+http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe[PuTTY]) to connect to
+the virtual machine. Connect to *localhost* on port *3022*, with the user
+*archimedes* and password *hamster*.
+
+[TIP]
+====
+If you don't want to start up the VirtualBox GUI to start a virtual machine in
+headless mode, you can use the following command: `vboxmanage startvm osm16-v1.0
+--type headless`.
+
+To shutdown the machine, use `shutdown -h now` while logged in via SSH.
+====
+
+END OF TUTORIAL
