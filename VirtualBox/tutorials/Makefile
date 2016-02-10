@@ -1,16 +1,12 @@
-.PHONY: clean all pdf
+.PHONY: clean all
 
-all: ov15-vm.html osm16-vm.html
+SRC=$(wildcard *.asciidoc)
+HTML=$(subst .asciidoc,.html,$(SRC))
 
-pdf: ov15-vm.pdf osm16-vm.pdf
+all: $(HTML)
 
 %.html: %.asciidoc
 	asciidoctor $*.asciidoc
 
-%.pdf: %.asciidoc
-	asciidoctor-pdf -a allow-uri-read $*.asciidoc
-
 clean:
 	rm -f *.html
-	rm -f *.pdf
-	rm -f *.pdfmarks
