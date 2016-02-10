@@ -20,12 +20,6 @@ if [ $# -lt 1 ] ; then
   exit $ERROR_INVALID_ARGS
 fi
 
-if [ "$(id -u)" != "0" ]; then
-  echo "For now, must be root to create VMs due to mounts."
-  echo "TODO: Fix this."
-  exit $ERROR_MUST_BE_ROOT
-fi
-
 CONFIG="$(realpath $1)"
 if [ ! -f "${CONFIG}" ] ; then
   echo "Invalid config config file path: ${CONFIG}."
@@ -39,8 +33,17 @@ set +o allexport # Disable the above feature
 
 ./stages/createvdi.sh || fail
 
+OUID=$(whoami)
+
 # Enter a private mount namespace, and make sure everything is finally
 # unmounted properly.
 #
-# See https://github.com/oleks/sandstone/blob/master/src/private-mntns.c
-unshare -m sh -c "mount --make-rprivate / && ./stages/mountvdi.sh"
+# See https://github.com/oleks/sandstone/blob/master/src/private-mntns.
+#sudo -E unshare -m sh -c "mount --make-rprivate / &&
+
+./stages/firstmountvdi.sh
+
+./stages/debootstrap.sh
+
+bash
+#su "$OUID" ./stages/export.sh"
