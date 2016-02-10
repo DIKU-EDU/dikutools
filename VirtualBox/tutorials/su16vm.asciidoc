@@ -53,7 +53,7 @@ make sure that what you've downloaded is what we intended for you to download.
 The SHA256 checksum of our `su16vm-v1.0.ova` is:
 
 ----
-4eae1eeede356ca21951153c5af1ae06f289de033f6c5c3bfee6a3d47a031a04
+908872938255754e4b2ef34b9171634141f9a09689dbdb783619fe5fe5679c74
 ----
 
 ====
