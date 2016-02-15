@@ -1,6 +1,6 @@
 = Tutorial: Getting started with the VirtualBox image
 OSM 2016 Course Team
-v1.0, February 8, 2016
+v1.1, February 15, 2016
 :doctype: article
 :backend: html5
 :docinfo:
@@ -12,7 +12,7 @@ To make it easier for you to get started with the tools that you need for this
 course, we've set up a VirtualBox image with all the tools that you will need.
 Follow this guide to get started with the VirtualBox image.
 
-=== The VirtualBox Image
+== The VirtualBox Image
 
 https://www.virtualbox.org/[Oracle VM VirtualBox] is a free software that can
 create, run, and monitor virtual machines (VMs). This sort of software is
@@ -36,8 +36,8 @@ Virtual Appliance (OVA)] which you can _import_ in your VirtualBox.
 
 Use one of the following mirrors to download the appliance:
 
-* http://napoleon.hiperfit.dk/~oleks/osm16-v1.0.ova
-* http://harlem.dikurevy.dk/~oleks/osm16-v1.0.ova
+* http://napoleon.hiperfit.dk/~niels/osm16-v1.1.ova
+* http://harlem.dikurevy.dk/~niels/osm16-v1.1.ova
 
 [TIP]
 .Checksums
@@ -50,7 +50,7 @@ It is important to check the checksum the files you download over an insecure
 network (such as http), and from otherwise untrusted services. This way you can
 make sure that what you've downloaded is what we intended for you to download.
 
-The SHA256 checksum of our `osm16-v1.0.ova` is:
+The SHA256 checksum of our `osm16-v1.1.ova` is:
 
 ----
 4eae1eeede356ca21951153c5af1ae06f289de033f6c5c3bfee6a3d47a031a04
@@ -58,15 +58,15 @@ The SHA256 checksum of our `osm16-v1.0.ova` is:
 
 ====
 
-Once you have a good-looking `osm16-v1.0.ova`, and have VirtualBox
+Once you have a good-looking `osm16-v1.1.ova`, and have VirtualBox
 installed:
 
 . Open up VirtualBox and choose File → Import Appliance.
-. Choose a virtual appliance to import: your `osm16-v1.0.ova`.
+. Choose a virtual appliance to import: your `osm16-v1.1.ova`.
 . Press "Next" and "Import".
 
-You now have a virtual image "osm16-v1.0" in your left-hand sidebar. Select it
-and press "Start".
+You now have a virtual image "osm16-v1.0" in your left-hand sidebar (although
+it's actually v1.1). Select it and press "Start".
 
 [TIP]
 .Trouble starting the virtual machine? The virtual machine is sloooow?
@@ -118,24 +118,24 @@ started with working with directories.
 
 Start up LXTerminal.
 
-Create a directory, `ov`, in our home (`~`) directory:
+Create a directory, `test`, in our home (`~`) directory:
 
 ----
-~$ mkdir ov
+~$ mkdir test
 ----
 
 To change the current working directory, use the `cd` command:
 
 ----
-~$ cd ov
-~/ov$ 
+~$ cd test
+~/test$ 
 ----
 
 To go one level up in the directory structure, use `..` as the destination
 argument.
 
 ----
-~/ov$ cd ..
+~/test$ cd ..
 ~$ 
 ----
 
@@ -143,7 +143,7 @@ We can use `ls` to list the contents of a directory:
 
 ----
 ~$ ls
-Desktop   opt   ov
+Desktop   osm   test
 ~$
 ----
 
@@ -153,7 +153,7 @@ If you find it obscure to work inside the VirtualBox, and instead want to use
 your favourite OS X, Windows, or FreeBSD editor, you can set up a shared folder
 between your host operating system and the guest virtual machine.
 
-1. Select the "osm16-v1.0.ova" image and press "Settings".
+1. Select the "osm16-v1.0" OS and press "Settings".
 
 2. Select the "Shared Folders" tab on the left-hand side of the popped up
 window.
@@ -164,7 +164,7 @@ to add a new Shared folder.
 4. Select a path on your host machine as the "Folder Path".
 
 5. To avoid a myriad of possible problems, let "Folder Name" be some name
-without spaces. For instance, "ov15-sf", standing for ov15 shared folder.
+without spaces. For instance, "osm16-sf", standing for osm16 shared folder.
 
 6. Select "Auto-mount".
 
@@ -209,7 +209,7 @@ If you don't want to start up the VirtualBox GUI to start a virtual machine in
 headless mode, you can use the following command: `vboxmanage startvm osm16-v1.0
 --type headless`.
 
-To shutdown the machine, use `shutdown -h now` while logged in via SSH.
+To shutdown the machine, use `sudo shutdown -h now` while logged in via SSH.
 ====
 
 END OF TUTORIAL
