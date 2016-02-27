@@ -4,14 +4,14 @@
 set -e
 set -x
 
-./stages/initvm.sh
-
 set -o allexport
 VERNAME="${NAME}-v${VERSION}"
 OVA_PATH="${NAME}-v${VERSION}.ova"
 FULL_PATH="${VERNAME}/${VERNAME}"
 VDI_PATH="${FULL_PATH}.vdi"
 set +o allexport
+
+./stages/initvm.sh
 
 # Start the VM and scrub it!
 ./stages/spinupvm.sh

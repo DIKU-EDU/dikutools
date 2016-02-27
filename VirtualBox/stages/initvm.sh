@@ -7,13 +7,6 @@ set -x
 # Check that the original VM actually exists
 vboxmanage showvminfo "$BASE" &> /dev/null
 
-set -o allexport
-VERNAME="${NAME}-v${VERSION}"
-OVA_PATH="${NAME}-v${VERSION}.ova"
-FULL_PATH="${VERNAME}/${VERNAME}"
-VDI_PATH="${FULL_PATH}.vdi"
-set +o allexport
-
 # Shut down the new VM if it already exists and is running:
 if vboxmanage list runningvms | grep "\"${VERNAME}\"" > /dev/null ; then
   ./stages/spindownvm.sh
@@ -39,8 +32,17 @@ vboxmanage closemedium "${VDI_PATH}" --delete &>/dev/null || true
 # Clone the HD to something we can later compact:
 vboxmanage clonehd "${HD_UUID}" "${VDI_PATH}" --format VDI
 
+if [ "${ARCH}" = "x86" ]; then
+  OSTYPE="Linux"
+elif [ "${ARCH}" = "x86_64" ] || [ -z "${ARCH}" ]; then
+  OSTYPE="Linux_64"
+else
+  echo "Invalid ARCH: ${ARCH}."
+  exit 1
+fi
+
 # Create a new VM with the version number:
-vboxmanage createvm --name "${VERNAME}" --ostype "Debian_64" --register
+vboxmanage createvm --name "${VERNAME}" --ostype "${OSTYPE}" --register
 
 # Create a SATA storage controller:
 vboxmanage storagectl "${VERNAME}" \
