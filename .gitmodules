@@ -1,3 +1,6 @@
 [submodule "internet/wpa-supplicant-eduroam"]
 	path = internet/wpa-supplicant-eduroam
 	url = git@github.com:oleks/wpa-supplicant-eduroam.git
+[submodule "mailman/mailman2-archiver"]
+	path = mailman/mailman2-archiver
+	url = https://github.com/oleks/mailman2-archiver/
