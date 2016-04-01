@@ -1,22 +1,27 @@
 #!/usr/bin/env python3
 
 # 1. Download the Assignment report HTML page(s).
-# 2. Call this script, specifying the keyword and threshold (how many times the
-#    keyword should occur for a student)
+# 2. Call this script, specifying the regex and threshold (how many times the
+#    regex should occur for a student)
 
 # Prerequisites:
 # * python3 (it's about time!)
 # * beautifulsoup4 (install it using pip3)
 
-import sys
+import sys, re
 
 if len(sys.argv) != 4:
   print("Usage: " + sys.argv[0] +
-    " <keyword> <threshold> <Assignment report.html>")
+    " <regex> <threshold> <Assignment report.html>")
   exit(2)
 
-keyword = str(sys.argv[1])
-threshold = int(sys.argv[2])
+regex = str(sys.argv[1])
+strict = False
+if sys.argv[2].startswith("="):
+  strict = True
+  threshold = int(sys.argv[2][1:])
+else:
+  threshold = int(sys.argv[2])
 report = sys.argv[3]
 
 from bs4 import BeautifulSoup
@@ -32,7 +37,8 @@ for row in table.find_all('tr')[1:]:
   mail = cells[1].span.text
   accepted = 0
   for assignment in cells[2:]:
-    if (keyword in assignment.span.span.text):
+    if (re.search(regex, assignment.text, re.IGNORECASE)):
       accepted += 1
-  if accepted >= threshold:
+  if ((strict and accepted == threshold) or
+      (not strict and accepted >= threshold)):
     print(name + " <" + mail + "@alumni.ku.dk>")
