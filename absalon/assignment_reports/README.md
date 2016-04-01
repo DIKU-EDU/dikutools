@@ -14,14 +14,14 @@ To get all students:
 
 To get students that got at least 4 assignments approved:
 
-    $ ./filter.py "Satisfactory|Passed" 4 1.html > 1.txt
-    $ ./filter.py "Satisfactory|Passed" 4 2.html > 2.txt
+    $ ./filter.py "\(Satisfactory|Passed\)" 4 1.html > 1.txt
+    $ ./filter.py "\(Satisfactory|Passed\)" 4 2.html > 2.txt
     $ LC_ALL=C cat 1.txt 2.txt | sort > approved.txt
 
 To get the students that got exactly 3 assignments approved:
 
-    $ ./filter.py "Satisfactory|Passed" =3 1.html > 1.txt
-    $ ./filter.py "Satisfactory|Passed" =3 2.html > 2.txt
+    $ ./filter.py "\(Satisfactory|Passed\)" =3 1.html > 1.txt
+    $ ./filter.py "\(Satisfactory|Passed\)" =3 2.html > 2.txt
     $ LC_ALL=C cat 1.txt 2.txt | sort > almost-approved.txt
 
 To get the dead souls (in case of 5 assignments):
