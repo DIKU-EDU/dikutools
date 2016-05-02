@@ -19,32 +19,35 @@ def timeString(timeObj):
 
 import sys, os.path, datetime
 
-def main(filepath):
-  basename = os.path.basename(filepath)
-  print(basename)
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 
-  from pydrive.auth import GoogleAuth
-  from pydrive.drive import GoogleDrive
-
+def login():
   gauth = GoogleAuth()
   gauth.LocalWebserverAuth()
 
-  drive = GoogleDrive(gauth)
+  return GoogleDrive(gauth)
+
+def getGfile(drive, filepath):
+  basename = os.path.basename(filepath)
 
   gfiles = drive.ListFile({'q':
       "title = '%s' and trashed=false" % basename
     }).GetList()
   if len(gfiles) > 1:
     print("There's more than one file called %s" % basename)
-    sys.exit(1)
+    return None
 
-  gfile = gfiles[0]
+  return gfiles[0]
+
+def tryUpload(drive, filepath):
+  gfile = getGfile(drive, filepath)
 
   gmod = gfile['modifiedDate']
 
   if (gmod[-1] != "Z"):
     print("Receieved unsupported datetime from Google")
-    sys.exit(1)
+    return 2
   gmod = time.strptime(gmod[:-1], "%Y-%m-%dT%H:%M:%S.%f")
 
   localmod = time.gmtime(os.path.getmtime(filepath))
@@ -54,12 +57,23 @@ def main(filepath):
     print("  Google: " + timeString(gmod))
     print("Covardly refusing to solve the causality problem.")
     print("Check if file hasn't been updated on Google.")
-    sys.exit(1)
+    return 3
 
   gfile.SetContentFile(filepath)
   gfile.Upload()
 
-  return gfile
+  return 0
+
+def main(filepath):
+  drive = login()
+  if drive == None:
+    print("Couldn't login..")
+    sys.exit(1)
+
+  retval = tryUpload(drive, filepath)
+  if retval != 0:
+    print("Couldn't upload the file..")
+    sys.exit(retval)
 
 if __name__ == "__main__":
   main(sys.argv[1])
