@@ -7,8 +7,8 @@ examiners. That is, if you feel resentful of automatic sync.
 
 Usage: ~./upload.py <very-good-student.txt>~
 
-NB! You will have to point and click in your web-browser as the scripts asks
-for your credentials.
+NB! You will have to point and click in your web-browser as the script asks for
+your credentials.
 
 Or from within Python:
 
