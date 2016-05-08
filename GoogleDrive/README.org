@@ -30,6 +30,6 @@ prompt instead:
 
 * Requiremenets
 
-  * [[http://pythonhosted.org/PyDrive/][PyDrive]] (~pip install pydrive~)
+  * [[http://pythonhosted.org/PyDrive/][PyDrive]] (~pip install pydrive~).
   * [[https://pythonhosted.org/PyDrive/quickstart.html#authentication][Some
     Google Drive API credentials]].
