@@ -22,8 +22,8 @@ upload.tryUpload(drive, filepath3)
 # ...
 #+END_SRC
 
-Requires: PyDrive (~pip install pydrive~)
+* Requiremenets
 
-You will also
-[[https://pythonhosted.org/PyDrive/quickstart.html#authentication][need some
-credentials]].
+  * [[http://pythonhosted.org/PyDrive/][PyDrive]] (~pip install pydrive~)
+  * [[https://pythonhosted.org/PyDrive/quickstart.html#authentication][Some
+    Google Drive API credentials]].
