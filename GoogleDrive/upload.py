@@ -1,17 +1,5 @@
 #!/usr/bin/env python3
 
-# Uploads the given uniquely named file to Google Drive.
-#
-# Useful if sharing e.g. exam-number-named files via Google Drive with the
-# external examiners. That is, if you feel resentful of automatic sync.
-#
-# Usage: ./upload.py <very-good-student.txt>
-#
-# Requires: PyDrive (sudo pip3 install pydrive)
-#
-# You will also need some credentials:
-#   https://pythonhosted.org/PyDrive/quickstart.html#authentication
-
 import sys, os.path, time
 
 def timeString(timeObj):
