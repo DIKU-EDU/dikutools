@@ -7,12 +7,19 @@ external examiners. That is, if you feel resentful of automatic sync.
 
 Usage: ~./upload.py <very-good-student.txt>~
 
+NB! You will have to point and click in your web-browser as the scripts asks
+for your credentials.
+
 Or from within Python:
 
 #+BEGIN_SRC python
 import upload
 drive = upload.login()
-upload.tryUpload(drive, filepath)
+# Point-and-click in the freshly-spawned browser window.
+upload.tryUpload(drive, filepath1)
+upload.tryUpload(drive, filepath2)
+upload.tryUpload(drive, filepath3)
+# ...
 #+END_SRC
 
 Requires: PyDrive (~sudo pip install pydrive~)
