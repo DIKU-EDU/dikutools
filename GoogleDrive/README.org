@@ -24,5 +24,6 @@ upload.tryUpload(drive, filepath3)
 
 Requires: PyDrive (~sudo pip install pydrive~)
 
-You will also need some credentials:
-  https://pythonhosted.org/PyDrive/quickstart.html#authentication
+You will also
+[[https://pythonhosted.org/PyDrive/quickstart.html#authentication][need some
+credentials]].
