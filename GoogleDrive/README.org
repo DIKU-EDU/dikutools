@@ -9,11 +9,11 @@ Usage: ~./upload.py <very-good-student.txt>~
 
 or
 
-=+BEGIN_SRC python
+#+BEGIN_SRC python
 import upload
 drive = upload.login()
 upload.tryUpload(drive, filepath)
-=+END_SRC
+#+END_SRC
 
 Requires: PyDrive (~sudo pip3 install pydrive~)
 
