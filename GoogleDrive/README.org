@@ -22,7 +22,7 @@ upload.tryUpload(drive, filepath3)
 # ...
 #+END_SRC
 
-Requires: PyDrive (~sudo pip install pydrive~)
+Requires: PyDrive (~pip install pydrive~)
 
 You will also
 [[https://pythonhosted.org/PyDrive/quickstart.html#authentication][need some
