@@ -7,7 +7,7 @@ external examiners. That is, if you feel resentful of automatic sync.
 
 Usage: ~./upload.py <very-good-student.txt>~
 
-or
+Or from within Python:
 
 #+BEGIN_SRC python
 import upload
