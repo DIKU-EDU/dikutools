@@ -1,6 +1,6 @@
 #+TITLE: Google Drive Upload
 
-Uploads the given uniquely named file to Google Drive.
+Uploads the given, *uniquely named* file to Google Drive.
 
 Useful for sharing exam-number-named files via Google Drive with external
 examiners. That is, if you feel resentful of automatic sync.
