@@ -2,8 +2,8 @@
 
 Uploads the given uniquely named file to Google Drive.
 
-Useful if sharing e.g. exam-number-named files via Google Drive with the
-external examiners. That is, if you feel resentful of automatic sync.
+Useful for sharing exam-number-named files via Google Drive with external
+examiners. That is, if you feel resentful of automatic sync.
 
 Usage: ~./upload.py <very-good-student.txt>~
 
