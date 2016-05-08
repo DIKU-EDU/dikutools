@@ -26,7 +26,6 @@ prompt instead:
 >>> upload.tryUpload(drive, filepath1) # Returns 0 on success.
 >>> upload.tryUpload(drive, filepath2) # Returns 0 on success.
 >>> upload.tryUpload(drive, filepath3) # Returns 0 on success.
-# ...
 #+END_SRC
 
 * Requiremenets
