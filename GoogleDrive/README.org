@@ -5,20 +5,27 @@ Uploads the given uniquely named file to Google Drive.
 Useful for sharing exam-number-named files via Google Drive with external
 examiners. That is, if you feel resentful of automatic sync.
 
-Usage: ~./upload.py <very-good-student.txt>~
+* Usage
 
-NB! You will have to point and click in your web-browser as the script asks for
-your credentials.
+From the command-line:
 
-Or from within Python:
+#+BEGIN_SRC sh
+$ ./upload.py filepath1
+$ ./upload.py filepath2
+$ ./upload.py filepath3
+#+END_SRC
+
+However, you will have to point-and-click in your web-browser on each
+instanciation of the script, so you might find it nicer to work with a Python
+prompt instead:
 
 #+BEGIN_SRC python
-import upload
-drive = upload.login()
+>>> import upload
+>>> drive = upload.login()
 # Point-and-click in the freshly-spawned browser window.
-upload.tryUpload(drive, filepath1)
-upload.tryUpload(drive, filepath2)
-upload.tryUpload(drive, filepath3)
+>>> upload.tryUpload(drive, filepath1) # Returns 0 on success.
+>>> upload.tryUpload(drive, filepath2) # Returns 0 on success.
+>>> upload.tryUpload(drive, filepath3) # Returns 0 on success.
 # ...
 #+END_SRC
 
