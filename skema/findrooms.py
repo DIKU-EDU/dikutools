@@ -16,7 +16,10 @@ BUILDINGS = [
   "August Krogh",
   "Biocenter",
   "Rockefeller",
-  "Ifi - Institut for Idræt, Nørre Allé"
+  "Ifi - Institut for Idræt, Nørre Allé",
+  "Frb. omr. 1, Bülowsvej",
+  "Frb. omr. 2, Højhuset",
+  "Frb. omr. 3, Rolighedsvej"
 ]
 
 STUDY_YEAR = "1516"
