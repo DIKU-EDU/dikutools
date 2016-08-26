@@ -22,7 +22,7 @@ BUILDINGS = [
   "Frb. omr. 3, Rolighedsvej"
 ]
 
-STUDY_YEAR = "1516"
+STUDY_YEAR = "1617"
 
 JS_PATH = r"https://skema.ku.dk/ku" + STUDY_YEAR + r"/js/filter.js"
 
