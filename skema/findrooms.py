@@ -66,7 +66,7 @@ def findBigEnoughRooms(n_people):
 
 def findWeeks(block):
   WEEKS_RE = re.compile(
-    r"AddWeeks\(\"(.*?)\",\".*NAT Blok " + str(block) + r" - 7 uger .*\"")
+    r"AddWeeks\(\"(.*?)\",\".*SCI Blok " + str(block) + r" - 9 uger .*\"")
 
   match = WEEKS_RE.search(js)
 
