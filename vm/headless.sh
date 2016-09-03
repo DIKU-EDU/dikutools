@@ -8,6 +8,7 @@ HDA=$1
 PORT=1337
 
 qemu-system-${GEN_ARCH} \
+  -monitor stdio \
   -enable-kvm \
   -display none \
   -m ${MEM} \
