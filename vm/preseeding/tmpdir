@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+
+# Do something with a temporary directory.
+#
+# For documentation, try this:
+# $ ./tmpdir --help
+#
+# This util is written in Python because, in principle, this could be a
+# cross-platform util. This remains to be tested.
+#
+# Author: Oleks <oleks@oleks.info>
+#
+# This is an OnlineTA utility. For more utilities, see
+# https://github.com/onlineta/sandstone.
+#
+# Copyright (c) 2015 OnlineTA.
+# Copenhagen Liberal License - v0.5 - September 6, 2015.
+#
+# Permission is hereby granted, free of charge, to any legal person obtaining
+# these digital artefacts, to deal in the artefacts as they please, including,
+# without limitation, the rights to use, copy, modify, distribute, sublicense,
+# and/or sell these artefacts, and to permit legal persons, to whom the
+# artefacts are furnished, to do so as well, subject to the following
+# conditions:
+#
+# 1. The authors of these artefacts are properly attributed for their original
+# work, without being misattributed for the changes made by others, wary of the
+# above copyright notice and the below statement of no warranty.
+#
+# 2. Neither the names of the authors, nor the copyright holders may be used to
+# endorse or promote products derived from these artefacts without specific
+# prior written permission.
+#
+# THE ARTEFACTS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHENTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE, TITLE OR NON-INFRINGEMENT. IN NO EVENT
+# SHALL THE AUTHORS OF THE ARTEFACTS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF, OR IN CONNECTION WITH THE ARTEFACTS, THE USE, OR OTHER
+# DEALINGS IN THE ARTEFACTS.
+
+import argparse, os, os.path, shutil, subprocess, sys, tempfile
+
+# http://stackoverflow.com/a/12514470/5801152
+def copytree(src, dst, symlinks=False, ignore=None):
+  for item in os.listdir(src):
+    s = os.path.join(src, item)
+    d = os.path.join(dst, item)
+    if os.path.isdir(s):
+      shutil.copytree(s, d, symlinks, ignore)
+    else:
+      shutil.copy2(s, d)
+
+def do_with_tmpdir(args, tmpdir):
+
+  if args.copy:
+    if os.path.isfile(args.copy):
+      shutil.copy2(args.copy, tmpdir)
+    else:
+      copytree(args.copy, tmpdir)
+
+  cwd = "."
+
+  had_tmpdir = False
+  for i, arg in enumerate(args.args):
+    if arg == "%%TMPDIR":
+      args.args[i] = tmpdir
+      had_tmpdir = True
+
+  if (args.cwd or not had_tmpdir) and not args.keepwd:
+    cwd = tmpdir
+
+  env = os.environ.copy()
+  if args.env:
+    env["TMPDIR"] = tmpdir
+
+  command = [args.command] + args.args
+
+  proc = subprocess.Popen(command, cwd=cwd, env=env)
+  proc.wait()
+
+def main_with_args(args):
+  dir=tempfile.gettempdir()
+  if args.dir:
+    dir=args.dir
+
+  prefix=tempfile.gettempprefix()
+  if args.prefix:
+    prefix=args.prefix
+
+  suffix=""
+  if args.suffix:
+    suffix=args.suffix
+
+  tmpdir = tempfile.mkdtemp(
+    dir=dir, prefix=prefix, suffix=suffix)
+  try:
+    do_with_tmpdir(args, tmpdir)
+  finally:
+    shutil.rmtree(tmpdir)
+
+def main():
+  parser = argparse.ArgumentParser(
+    description=
+"""
+Do something with a temporary directory (TMPDIR).
+""")
+  parser.add_argument(
+    "command", metavar="COMMAND",
+    help="the command to execute in the current environment, with the " +
+         "current working directory; if %%TMPDIR does not appear once " +
+         "among its arguments, change working directory to TMPDIR")
+  parser.add_argument(
+    "args", metavar="...", nargs=argparse.REMAINDER,
+    help="arguments to pass to the command; all %%%%TMPDIR arguments " +
+         "will be replaced by the absolute path to the created TMPDIR")
+  parser.add_argument(
+    "-d", "--dir", metavar="PATH",
+    help="create the temporary directory under PATH")
+  parser.add_argument(
+    "-p", "--prefix", metavar="TEXT",
+    help="create the temporary directory with directory name prefix TEXT")
+  parser.add_argument(
+    "-s", "--suffix", metavar="TEXT",
+    help="create the temporary directory with directory name suffix TEXT")
+  parser.add_argument(
+    "-c", "--copy", metavar="PATH",
+    help="copy PATH (recursively) into TMPDIR before running COMMAND")
+  parser.add_argument(
+    "-g", "--cwd", action="store_true",
+    help="cd in to TMPDIR before executing COMMAND")
+  parser.add_argument(
+    "-k", "--keepwd", action="store_true",
+    help="stay in current working directory")
+  parser.add_argument(
+    "-e", "--env", action="store_true",
+    help="set the environment variable TMPDIR to the absolute path to " +
+         "the created tmpdir")
+  args = parser.parse_args()
+  main_with_args(args)
+
+if __name__ == "__main__":
+  main()
