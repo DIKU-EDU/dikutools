@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-GEN_ARCH=x86_64
+GEN_ARCH=$1
 MEM=512
-HDA=$1
+HDA=$2
 PORT=1337
 
 qemu-system-${GEN_ARCH} \
