@@ -15,5 +15,5 @@ sshpass -p "hamster2" ssh \
 apt-get update
 apt-get -y install toilet
 echo $MESSAGE | toilet > /etc/motd
-apt-get remove --auto-remove toilet
+apt-get -y remove --auto-remove toilet
 \""
