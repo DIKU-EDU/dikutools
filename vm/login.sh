@@ -5,7 +5,7 @@ set -euo pipefail
 PORT=1337
 
 ssh \
-  -X \
+  -X -CY \
   -p ${PORT} \
   -o UserKnownHostsFile=/dev/null \
   -o StrictHostKeyChecking=no \
