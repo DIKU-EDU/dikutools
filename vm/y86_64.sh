@@ -17,4 +17,6 @@ tar xvf sim.tar
 cd sim
 make clean
 make
+cd ..
+rm sim.tar
 \""
