@@ -33,4 +33,5 @@ cd /etc/nginx/sites-enabled/
 rm -f public_html
 ln -s ../sites-available/public_html public_html
 service nginx restart
+su archimedes -c \\\"mkdir /home/archimedes/public_html\\\"
 \""
