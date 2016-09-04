@@ -13,7 +13,7 @@ sshpass -p "hamster2" ssh \
   root@localhost "bash -c \"
 apt-get update
 apt-get -y install git xorg build-essential gdb qemu bochs nginx \\
-  flex bison tcl-dev tk-dev
+  flex bison tcl8.5-dev tk8.5-dev
 cat <<EOF | tr '%' '\\$' > /etc/nginx/sites-available/public_html
 server {
   listen 80;
