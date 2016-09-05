@@ -31,13 +31,12 @@ your CPU. (This features is called VT-x on Intel, and AMD-V on AMD systems.)
 
 ====
 
-We have prepared https://en.wikipedia.org/wiki/Open_Virtualization_Format[Open
-Virtual Appliance (OVA)] which you can _import_ in your VirtualBox.
+We have prepared a couple
+https://en.wikipedia.org/wiki/Open_Virtualization_Format[Open Virtual Appliance
+(OVA)] images which you can _import_ in your VirtualBox:
 
-Use one of the following mirrors to download the appliance:
-
-* http://napoleon.hiperfit.dk/~oleks/compsys16/
-* http://harlem.dikurevy.dk/~oleks/compsys16/
+* link:compsys16-debian-v1.0-32-bit.ova[32-bit]
+* link:compsys16-debian-v1.0-64-bit.ova[64-bit]
 
 [TIP]
 .Checksums
@@ -52,8 +51,8 @@ more confidence that you got what you intended.
 
 The SHA256 checksums are:
 
-* 32-bit: `4eae1eeede356ca21951153c5af1ae06f289de033f6c5c3bfee6a3d47a031a04`
-* 64-bit: `4eae1eeede356ca21951153c5af1ae06f289de033f6c5c3bfee6a3d47a031a04`
+* 32-bit: `aad5786878693903746aef387c7836da03f401cd548fb0eeb6c044e04510dc03`
+* 64-bit: `5ec4076b7957b04ef7e0f7588638c4594e09f79463e623d1bca82b18858a5b82`
 
 On Linux/OS X you can use the program `sha256sum`:
 
@@ -97,6 +96,14 @@ On Windows, you will need to add `C:\Program Files\Oracle\VirtualBox` to you
 `PATH` Environment Variable before you can frivolously use `VBoxManage` from
 the command-line.
 
+[IMPORTANT]
+.Allow VirtualBox to access your private network
+====
+
+Otherwise, you won't be able to login via SSH.
+
+====
+
 ====
 
 [TIP]
@@ -116,14 +123,34 @@ and AMD-V on AMD systems.)
 
 ====
 
-
 Welcome to Debian GNU/Linux:
 
-* Your hostname is "syracuse".
+* Your hostname is "syrakuse".
 * Your username is "archimedes".
-* Your (and the root) password is "hamster".
+* Your password is "hamster".
 
-The best place to start is to double-click the "Terminal - LXTerminal" icon.
+We suggest using SSH to log into the machine (on Windows, you can use
+http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe[PuTTY]). The
+VirtualBox image is set to forward host port 1337 to guest port 22 (SSH) on the
+client. So connect to *localhost* port 1337.
+
+In the near future you will also need to make sure that you have X11 forwarding
+enabled when you fire up an SSH session. In PuTTY, tick off Connection → SSH →
+X11 → Enable X11 forwarding.
+
+To make all this easier, we've set up a login script:
+
+* link:login.sh[Linux/OS X]
+* link:login.bat[Windows]
+
+[TIP]
+.Windows PATH
+====
+
+On Windows, you will need to add the folder whereto you downloaded PuTTY in
+your `PATH` Environment Variable before you can use the given script.
+
+====
 
 The prompt you'll be greeted with is canonical:
 
@@ -131,116 +158,25 @@ The prompt you'll be greeted with is canonical:
 archimedes@syracuse:~$
 ----
 
+The syntax is `<username>@
+
 Throughout the remainder of this course, we won't mention any archimedes at
-syracuse, and just state the working directory, when necessary.
+syrakuse, and just state the working directory, when necessary.
 
 Happy hacking :-)
 
-=== Troubleshooting
+=== Shutdown
 
-1. *Black background, no icons on the desktop.* This typically happens if you
-shut down the machine in an improper way, i.e. not using the graphical user
-interface.
-
-=== Working with Directories
-
-If you are completely new to working with Linux follow this short guide to get
-started with working with directories.
-
-Start up LXTerminal.
-
-Create a directory, `test`, in our home (`~`) directory:
+To properly shutdown the machine you should issue the following command while
+logged into the box:
 
 ----
-~$ mkdir test
+sudo shudown -h now
 ----
 
-To change the current working directory, use the `cd` command:
+To make this easier, we provide shutdown scripts, similar to our login scripts:
 
-----
-~$ cd test
-~/test$ 
-----
-
-To go one level up in the directory structure, use `..` as the destination
-argument.
-
-----
-~/test$ cd ..
-~$ 
-----
-
-We can use `ls` to list the contents of a directory:
-
-----
-~$ ls
-Desktop   osm   test
-~$
-----
-
-=== Setting up Shared Folders
-
-If you find it obscure to work inside the VirtualBox, and instead want to use
-your favourite OS X, Windows, or FreeBSD editor, you can set up a shared folder
-between your host operating system and the guest virtual machine.
-
-1. Select the "osm16-v1.0" OS and press "Settings".
-
-2. Select the "Shared Folders" tab on the left-hand side of the popped up
-window.
-
-3. Click on the little folder with a plus on the right-hand side of the window
-to add a new Shared folder.
-
-4. Select a path on your host machine as the "Folder Path".
-
-5. To avoid a myriad of possible problems, let "Folder Name" be some name
-without spaces. For instance, "osm16-sf", standing for osm16 shared folder.
-
-6. Select "Auto-mount".
-
-7. Click "OK".
-
-8. (Re)start the virtual machine.
-
-9. You will find the folder you shared under `/media/sf_${NAME}`, where
-`${NAME}` with the "Folder Name" from before.
-
-10. Optional: To quickly find `/media/sf_${NAME}/` you might want to add a soft
-link to this folder from your Desktop.
-
-  a. Open LXTerminal.
-
-  b. Enter the command `ln -s /media/sf_${NAME}/ ~/Desktop/${NAME}`, where you
-should use the "Folder Name" from before in place of `${NAME}`.
-
-  c. Close LXTerminal, and check that the link has appeared on the desktop, and
-works.
-
-=== Working with the VM via SSH
-
-Working with a desktop environment can be cumbersome, especially if you already
-set up the shared folders above.
-
-You can start up the virtual machine in so-called "headless mode" i.e. without
-an interface with the desktop environment, and work with the virtual machine
-exclusively from the command line.
-
-If you are using the VirtualBox GUI to manage your virtual machine, hold down
-*Shift* when you press *Start* to start the virtual machine in headless mode.
-
-While the machine is running, you can use SSH (on Windows, you can use
-http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe[PuTTY]) to connect to
-the virtual machine. Connect to *localhost* on port *3022*, with the user
-*archimedes* and password *hamster*.
-
-[TIP]
-====
-If you don't want to start up the VirtualBox GUI to start a virtual machine in
-headless mode, you can use the following command: `vboxmanage startvm osm16-v1.0
---type headless`.
-
-To shutdown the machine, use `sudo shutdown -h now` while logged in via SSH.
-====
+* link:shutdown.sh[Linux/OS X]
+* link:shutdown.bat[Windows]
 
 END OF TUTORIAL
