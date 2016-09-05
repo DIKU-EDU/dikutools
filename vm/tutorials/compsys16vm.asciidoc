@@ -112,14 +112,37 @@ Welcome to Debian GNU/Linux:
 * Your username is "archimedes".
 * Your password is "hamster".
 
-We suggest using SSH to log into the machine (on Windows, you can use
-http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe[PuTTY]). The
-VirtualBox image is set to forward host port 1337 to guest port 22 (SSH) on the
-client. So connect to *localhost* port 1337.
+We suggest using SSH to log into the machine. The VirtualBox image is set to
+forward host port 1337 to guest port 22 (SSH) on the client. So connect to
+`localhost` via port 1337.
 
 In the near future you will also need to make sure that you have X11 forwarding
-enabled when you fire up an SSH session. In PuTTY, tick off Connection → SSH →
-X11 → Enable X11 forwarding.
+enabled when you fire up an SSH session.
+
+[TIP]
+.SSH with X11 Forwarding on Windows
+====
+
+First and foremost, you should allow VirtualBox to access your private network,
+as we would like to log into a "localhost" via SSH.
+
+We recommend installing
+http://sourceforge.net/projects/xming/files/Xming/6.9.0.31/Xming-6-9-0-31-setup.exe/download[Xming]
+and downloading
+http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe[PuTTY].  Our scripts
+(below) assume you have started Xming and have PuTTY in your PATH.
+
+Xming is an X server for Windows. When you start Xming it will start a
+_background process_, so seemingly nothing will happen. Start Xming first.
+
+Now, fire up PuTTY and specify `localhost` as the address and port 1337. To
+enable X11 Forwarding you also need to tick off Connection → SSH → X11 → Enable
+X11 forwarding. You can save this configuration for later use, or use the login
+script below.
+
+To test that X11 works, try typing the command `xclock` once you log in.
+
+====
 
 To make all this easier, we've set up a login script:
 
