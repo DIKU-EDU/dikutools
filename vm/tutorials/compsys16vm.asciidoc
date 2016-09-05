@@ -106,23 +106,6 @@ Otherwise, you won't be able to login via SSH.
 
 ====
 
-[TIP]
-.Trouble starting the virtual machine? The virtual machine is sloooow?
-====
-
-If you are getting a warning like:
-
-____
-VT-x/AMD-V hardware acceleration is not available on your system.
-____
-
-You need to enable "hardware virtualization" in your BIOS/UEFI configurations.
-Restart your computer, enter the BIOS/UEFI. Enable the "hardware
-virtualization" feature for your CPU. (This features is called VT-x on Intel,
-and AMD-V on AMD systems.)
-
-====
-
 Welcome to Debian GNU/Linux:
 
 * Your hostname is "syrakuse".
@@ -158,12 +141,28 @@ The prompt you'll be greeted with is canonical:
 archimedes@syracuse:~$
 ----
 
-The syntax is `<username>@
-
+The syntax here is `<username>@<hostname>:<current working dirctory>`.
 Throughout the remainder of this course, we won't mention any archimedes at
-syrakuse, and just state the working directory, when necessary.
+syrakuse, and just state the working directory, if necessary.
 
 Happy hacking :-)
+
+[TIP]
+.Trouble starting the virtual machine? The virtual machine is sloooow?
+====
+
+If you are getting a warning like:
+
+____
+VT-x/AMD-V hardware acceleration is not available on your system.
+____
+
+You need to enable "hardware virtualization" in your BIOS/UEFI configurations.
+Restart your computer, enter the BIOS/UEFI. Enable the "hardware
+virtualization" feature for your CPU. (This features is called VT-x on Intel,
+and AMD-V on AMD systems.)
+
+====
 
 === Shutdown
 
