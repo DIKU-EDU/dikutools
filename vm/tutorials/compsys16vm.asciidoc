@@ -96,13 +96,13 @@ On Windows, you will need to add `C:\Program Files\Oracle\VirtualBox` to you
 `PATH` Environment Variable before you can frivolously use `VBoxManage` from
 the command-line.
 
+====
+
 [IMPORTANT]
 .Allow VirtualBox to access your private network
 ====
 
 Otherwise, you won't be able to login via SSH.
-
-====
 
 ====
 
