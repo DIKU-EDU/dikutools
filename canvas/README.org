@@ -1,0 +1,11 @@
+#+TITLE: Canvas Tips
+
+* Get all students
+
+#+BEGIN_SRC
+https://absalon.ku.dk/api/v1/courses/:course_id/sections?include=students
+#+END_SRC
+
+This returns a JSON object containing all sections. If you're one of those
+courses that lumps all students into one section, you're in luck, just grab
+those in "Hold 01", and off you go. Else, you'll have to combine the sections.
