@@ -1,6 +1,6 @@
 #+TITLE: Canvas Tips
 
-* Get all students
+* Get All Students
 
 #+BEGIN_SRC
 https://absalon.ku.dk/api/v1/courses/:course_id/sections?include=students
