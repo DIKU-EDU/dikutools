@@ -8,7 +8,7 @@ https://absalon.ku.dk/api/v1/courses/:course_id/sections?include=students
 
 This returns a JSON object containing all sections, with the students in them.
 If you're one of those courses that lumps all students into one section, you're
-in luck, just grab those in "Hold 01", else you'll have to do some
+in luck, just grab those in "Hold 01". Else, you'll have to do some
 combinatorics.
 
 This includes their names and KU e-mails. Beware, students now have _mixed_
