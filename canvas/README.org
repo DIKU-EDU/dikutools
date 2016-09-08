@@ -13,3 +13,7 @@ combinatorics.
 
 This includes their names and KU e-mails. Beware, students now have _mixed_
 =@ku.dk= and =@absalon.ku.dk= e-mail addresses.
+
+For more, see the Canvas API on
+[[https://canvas.instructure.com/doc/api/sections.html#method.sections.index][listing
+course sections]].
