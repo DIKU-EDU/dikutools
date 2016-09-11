@@ -11,9 +11,10 @@ use constant SITE => 'https://absalon.ku.dk/';
 # Absalon username
 my $USERNAME = 'dfz719';
 # Absalon password
-my $PASSWORD = 'hamster';
+my $PASSWROD = 'hamster';
 
-my $mech = WWW::Mechanize->new(cookie_jar => HTTP::Cookies->new(file => "cookies.txt"));
+my $mech = WWW::Mechanize->new(cookie_jar => HTTP::Cookies::Netscape->new(
+  file => "cookies.txt", autosave => 1));
 $mech->agent_alias('Windows Mozilla');
 
 main($mech);
@@ -29,6 +30,11 @@ sub login {
             'password' => $pass
         }
     )->status_line;
+    print "\n";
+    print $mech->submit_form(
+        form_name => 'hiddenform')->status_line;
+    print "\n";
+}
 
 
 sub main {
