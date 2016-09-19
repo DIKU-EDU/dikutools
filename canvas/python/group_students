@@ -1,0 +1,23 @@
+#!/usr/bin/env python3    
+
+import sys
+
+from canvas import *
+
+
+def main(args):
+    try:
+        [course_id] = args
+    except ValueError:
+        print('error: wrong arguments', file=sys.stderr)
+        print('usage: group_students COURSE_ID', file=sys.stderr)
+        return 1
+    c = Canvas()
+    students = c.all_students(course_id)
+    print(format_json(students))
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))
+
+
