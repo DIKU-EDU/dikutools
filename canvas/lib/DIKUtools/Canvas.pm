@@ -68,8 +68,10 @@ Endpoint documentation: L<https://canvas.instructure.com/doc/api/courses.html#me
 
 =cut
 
-sub course_users($self, $courseid, %args) {
-    return $self->_api_call( url => "/courses/$courseid/users", args => \%args )->@*;
+sub course_users($self, $courseid) {
+    my @sections = $self->_api_call( url => "/courses/$courseid/sections",
+                                     args => { 'include' => 'students' } )->@*;
+    return $sections[0]{students};
 }
 
 =head2 $canvas->create_group_category($courseid, $name)
