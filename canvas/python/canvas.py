@@ -43,6 +43,12 @@ class Canvas:
     def put(self, url_relative, **args):
         return _call_api(self.token, 'PUT', url_relative, **args)
 
+    def courses(self):
+        return self.get('courses')
+
+    def course(self, course_id):
+        return self.get('courses/{}'.format(course_id))
+    
     def all_students(self, course_id):
         sections = self.get('courses/{}/sections'.format(course_id),
                             include='students')
