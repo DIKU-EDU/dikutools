@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+import sys
 import urllib.parse
 import urllib.request
 import json
@@ -58,3 +61,30 @@ class Canvas:
             'members[]': members
         }
         return self.put('groups/{}'.format(group_id), **args)
+
+def main(args):
+    try:
+        method = args[0].upper()
+        url = args[1]
+        args = args[2:]
+        assert len(args) % 2 == 0
+        args = [(args[i], args[i + 1]) for i in range(0, len(args), 2)]
+    except IndexError:
+        print('error: wrong arguments', file=sys.stderr)
+        print('usage: canvas.py [GET|POST|PUT] URL [ARG_NAME ARG_VALUE]...',
+              file=sys.stderr)
+        return 1
+
+    c = Canvas()
+    call = {
+        'GET': c.get,
+        'POST': c.post,
+        'PUT': c.put
+    }[method]
+
+    output = call(url, _arg_list=args)
+    print(format_json(output))
+    return 0
+    
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))
