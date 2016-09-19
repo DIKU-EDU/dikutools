@@ -89,7 +89,7 @@ sub create_group_category($self, $courseid, $name) {
 	return $self->_api_call( url => "/courses/$courseid/group_categories", method => 'POST', args => $args );
 }
 
-=head2 $canvas->create_group($group_cat, $users)
+=head2 $canvas->create_group($group_cat, $users, $group_name = '')
 
 Creates a group belonging to a given group category, and puts the given users into it.
 
@@ -104,12 +104,12 @@ Endpoints used:
 
 =cut
 
-sub create_group ($self, $group_cat, $users) {
+sub create_group ($self, $group_cat, $users, $group_name = '') {
 	my @userids = map { $_->{id} } @$users;
 
 	# First create the group
 	my $url = '/group_categories/' . $group_cat->{id} . '/groups';
-	my $group_name = join(", ", map { $_->{short_name} } @$users);
+	$group_name //= join(", ", map { $_->{short_name} } @$users);
 
 	my $args = {
 		name       => $group_name,
