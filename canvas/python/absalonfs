@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 import sys
+import re
 
 import llfuse
 
-from canvas import Canvas
+from canvas import Canvas, format_json
 from cached_class import CachedClass
 from vfs import VFS, std_dir, std_file
 
@@ -16,13 +17,19 @@ class CanvasFS(VFS):
         self.canvas = canvas
 
     def get_contents(self, path):
-        if path == '':
-            return self.root()
-        elif path == 'courses':
-            return self.courses()
-        elif path.startswith('courses/'):
-            sub_path = path.split('/', 1)[1]
-            return self.course(sub_path)
+        routes = [
+            ('', self.root),
+            ('courses', self.courses),
+            ('courses/:id', self.course),
+            ('courses/:id/all.json', self.course_info),
+            ('courses/:id/name', self.course_name),
+        ]
+
+        for route, fun in routes:
+            regex = '^' + re.sub(':([^/]+)', r'(?P<\1>[^/]+)', route) + '$'
+            m = re.match(regex, path)
+            if m is not None:
+                return fun(**m.groupdict())
 
     def root(self):
         return std_dir(['courses'])
@@ -32,16 +39,18 @@ class CanvasFS(VFS):
                       in self.canvas.courses()]
         return std_dir(course_ids)
 
-    def course(self, sub_path):
-        parts = sub_path.split('/')
-        course_id = parts[0]
-        if len(parts) == 1:
-            return std_dir(['name'])
-        elif len(parts) == 2:
-            if parts[1] == 'name':
-                course = self.canvas.course(course_id)
-                data = course['name'].encode('utf-8') + b'\n'
-                return std_file(data)
+    def course(self, id):
+        return std_dir(['all.json', 'name'])
+
+    def course_info(self, id):
+        course = self.canvas.course(id)
+        data = format_json(course).encode('utf-8')
+        return std_file(data)
+
+    def course_name(self, id):
+        course = self.canvas.course(id)
+        data = course['name'].encode('utf-8') + b'\n'
+        return std_file(data)
 
 def main(args):
     try:
@@ -54,8 +63,8 @@ def main(args):
 
     fs = CanvasFS(CachedClass(Canvas()))
     fuse_options = set(llfuse.default_options)
-    fuse_options.add('fsname=canvas')
-    fuse_options.add('debug')
+    fuse_options.add('fsname=canvasfs')
+    # fuse_options.add('debug')
     llfuse.init(fs, mountpoint, fuse_options)
 
     try:

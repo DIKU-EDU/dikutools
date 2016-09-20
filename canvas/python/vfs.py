@@ -17,28 +17,28 @@ DIRECTORY, FILE = range(1, 3)
 class Entry(llfuse.EntryAttributes):
     def __init__(self):
         super(Entry, self).__init__()
-    
+
     def set_mode(self, mode):
         self.st_mode = mode
-    
+
     def set_size(self, size):
         self.st_size = size
-    
+
     def set_atime(self, atime):
         self.st_atime_ns = atime
-    
+
     def set_ctime(self, ctime):
         self.st_ctime_ns = ctime
-    
+
     def set_mtime(self, mtime):
         self.st_mtime_ns = mtime
-    
+
     def set_gid(self, gid):
         self.st_gid = gid
-    
+
     def set_uid(self, uid):
         self.st_uid = uid
-    
+
     def set_inode(self, inode):
         self.st_ino = inode
 
@@ -88,7 +88,7 @@ class VFS(llfuse.Operations):
     def get_contents_check(self, path):
         try:
             typ, entry, elements = self.get_contents(path)
-        except ValueError:
+        except TypeError:
             raise llfuse.FUSEError(errno.ENOENT)
         except Exception as e:
             traceback.print_exc()

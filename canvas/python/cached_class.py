@@ -45,4 +45,4 @@ class CachedClass(object):
             return val
 
     def __setattr__(self, name, val):
-        self.thing.__setattr__(name, val)        
+        self.thing.__setattr__(name, val)
