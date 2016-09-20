@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+
+import sys
+
+import llfuse
+
+from canvas import Canvas
+from cached_class import CachedClass
+from vfs import VFS, std_dir, std_file
+
+
+class CanvasFS(VFS):
+    def __init__(self, canvas):
+        super(CanvasFS, self).__init__()
+
+        self.canvas = canvas
+
+    def get_contents(self, path):
+        if path == '':
+            return self.root()
+        elif path == 'courses':
+            return self.courses()
+        elif path.startswith('courses/'):
+            sub_path = path.split('/', 1)[1]
+            return self.course(sub_path)
+
+    def root(self):
+        return std_dir(['courses'])
+
+    def courses(self):
+        course_ids = [str(course['id']) for course
+                      in self.canvas.courses()]
+        return std_dir(course_ids)
+
+    def course(self, sub_path):
+        parts = sub_path.split('/')
+        course_id = parts[0]
+        if len(parts) == 1:
+            return std_dir(['name'])
+        elif len(parts) == 2:
+            if parts[1] == 'name':
+                course = self.canvas.course(course_id)
+                data = course['name'].encode('utf-8') + b'\n'
+                return std_file(data)
+
+def main(args):
+    try:
+        [mountpoint] = args
+    except ValueError:
+        print('error: wrong arguments', file=sys.stderr)
+        print('usage: fuse MOUNTPOINT',
+              file=sys.stderr)
+        return 1
+
+    fs = CanvasFS(CachedClass(Canvas()))
+    fuse_options = set(llfuse.default_options)
+    fuse_options.add('fsname=canvas')
+    fuse_options.add('debug')
+    llfuse.init(fs, mountpoint, fuse_options)
+
+    try:
+        llfuse.main(workers=1)
+    except:
+        llfuse.close(unmount=False)
+        raise
+
+    llfuse.close()
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))

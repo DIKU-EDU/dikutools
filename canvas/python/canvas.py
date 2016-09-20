@@ -9,15 +9,13 @@ import json
 def format_json(d):
     return json.dumps(d, sort_keys=True, indent=2, ensure_ascii=False)
 
-_api_base = 'https://absalon.ku.dk/api/v1/'
-
-def _call_api(token, method, url_relative, **args):
+def _call_api(token, method, api_base, url_relative, **args):
     try:
         args = args['_arg_list']
     except KeyError:
         pass
     query_string = urllib.parse.urlencode(args, safe='[]@', doseq=True).encode('utf-8')
-    url = _api_base + url_relative
+    url = api_base + url_relative
     headers = {
         'Authorization': 'Bearer ' + token
     }
@@ -28,20 +26,24 @@ def _call_api(token, method, url_relative, **args):
     return data
 
 class Canvas:
-    def __init__(self, token=None):
+    def __init__(self,
+                 api_base='https://absalon.ku.dk/api/v1/',
+                 token=None):
+        self.api_base = api_base
+
         if token is None:
             with open('token') as f:
                 token = f.read().strip()
         self.token = token
 
     def get(self, url_relative, **args):
-        return _call_api(self.token, 'GET', url_relative, **args)
+        return _call_api(self.token, 'GET', self.api_base, url_relative, **args)
 
     def post(self, url_relative, **args):
-        return _call_api(self.token, 'POST', url_relative, **args)
+        return _call_api(self.token, 'POST', self.api_base, url_relative, **args)
 
     def put(self, url_relative, **args):
-        return _call_api(self.token, 'PUT', url_relative, **args)
+        return _call_api(self.token, 'PUT', self.api_base, url_relative, **args)
 
     def courses(self):
         return self.get('courses')
