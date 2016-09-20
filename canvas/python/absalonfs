@@ -2,6 +2,7 @@
 
 import sys
 import re
+import urllib.request
 
 import llfuse
 
@@ -16,23 +17,39 @@ class CanvasFS(VFS):
 
         self.canvas = canvas
 
-    def get_contents(self, path):
-        routes = [
+        self.route_taken = None
+
+        self.routes = [
             ('', self.root),
             ('courses', self.courses),
             ('courses/:id', self.course),
             ('courses/:id/all.json', self.course_info),
             ('courses/:id/name', self.course_name),
+            ('courses/:id/calendar.ics', self.course_calendar),
         ]
 
-        for route, fun in routes:
+    def get_contents(self, path):
+        for route, fun in self.routes:
             regex = '^' + re.sub(':([^/]+)', r'(?P<\1>[^/]+)', route) + '$'
             m = re.match(regex, path)
             if m is not None:
+                self.route_taken = route # used by `CanvasFS.static_elements`.
                 return fun(**m.groupdict())
 
+    def static_elements(self):
+        elements = []
+        start = self.route_taken
+        if start:
+            start += '/'
+        for route, fun in self.routes:
+            if route.startswith(start):
+                rest = route[len(start):]
+                if rest and not rest.startswith(':') and not '/' in rest:
+                    elements.append(rest)
+        return elements
+
     def root(self):
-        return std_dir(['courses'])
+        return std_dir(self.static_elements())
 
     def courses(self):
         course_ids = [str(course['id']) for course
@@ -40,7 +57,7 @@ class CanvasFS(VFS):
         return std_dir(course_ids)
 
     def course(self, id):
-        return std_dir(['all.json', 'name'])
+        return std_dir(self.static_elements())
 
     def course_info(self, id):
         course = self.canvas.course(id)
@@ -52,6 +69,13 @@ class CanvasFS(VFS):
         data = course['name'] + '\n'
         return std_file(data)
 
+    def course_calendar(self, id):
+        course = self.canvas.course(id)
+        url = course['calendar']['ics']
+        with urllib.request.urlopen(url) as f:
+            data = f.read()
+        return std_file(data)
+
 def main(args):
     try:
         [mountpoint] = args
@@ -61,10 +85,13 @@ def main(args):
               file=sys.stderr)
         return 1
 
+    debug = False
+
     fs = CanvasFS(CachedClass(Canvas()))
     fuse_options = set(llfuse.default_options)
     fuse_options.add('fsname=canvasfs')
-    # fuse_options.add('debug')
+    if debug:
+        fuse_options.add('debug')
     llfuse.init(fs, mountpoint, fuse_options)
 
     try:
