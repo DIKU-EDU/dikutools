@@ -22,6 +22,11 @@ class CanvasFS(VFS):
 
         self.routes = [
             ('', self.root),
+
+            ('self', self.self_),
+            ('self/files', self.self_files),
+            ('self/files/:file', self.self_file),
+
             ('courses', self.courses),
             ('courses/:course_id', self.course),
             ('courses/:course_id/all.json', self.course_info),
@@ -56,6 +61,22 @@ class CanvasFS(VFS):
     def root(self):
         return std_dir(self.static_elements())
 
+    def self_(self):
+        return std_dir(self.static_elements())
+
+    def self_files(self):
+        # TODO: Timestamps.
+        files = self.canvas.get('users/self/files')
+        return std_dir([file['display_name'] for file in files])
+
+    def self_file(self, file):
+        files = self.canvas.get('users/self/files', search_term=file)
+        assert len(files) == 1
+        url = files[0]['url']
+        with urllib.request.urlopen(url) as f:
+            data = f.read()
+        return std_file(data)
+    
     def courses(self):
         course_ids = [str(course['id']) for course
                       in self.canvas.courses()]
