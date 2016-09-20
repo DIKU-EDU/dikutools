@@ -44,12 +44,12 @@ class CanvasFS(VFS):
 
     def course_info(self, id):
         course = self.canvas.course(id)
-        data = format_json(course).encode('utf-8')
+        data = format_json(course)
         return std_file(data)
 
     def course_name(self, id):
         course = self.canvas.course(id)
-        data = course['name'].encode('utf-8') + b'\n'
+        data = course['name'] + '\n'
         return std_file(data)
 
 def main(args):

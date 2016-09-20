@@ -65,6 +65,8 @@ def std_dir(elements):
     )
 
 def std_file(data):
+    if isinstance(data, str):
+        data = data.encode('utf-8')
     return (
         FILE, file_entry(len(data)),
         data
