@@ -92,6 +92,8 @@ class VFS(llfuse.Operations):
             typ, entry, elements = self.get_contents(path)
         except TypeError:
             raise llfuse.FUSEError(errno.ENOENT)
+        except llfuse.FUSEError as e:
+            raise e
         except Exception as e:
             traceback.print_exc()
             raise llfuse.FUSEError(errno.ENOENT)

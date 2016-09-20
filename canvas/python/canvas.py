@@ -50,12 +50,18 @@ class Canvas:
 
     def course(self, course_id):
         return self.get('courses/{}'.format(course_id))
-    
+
     def all_students(self, course_id):
         sections = self.get('courses/{}/sections'.format(course_id),
                             include='students')
-        students = sections[0]['students']
+        students = sections[0]['students'] # This only works if there's one
+                                           # group for all students, like in the
+                                           # typical "Hold 01" case.
         return students
+
+    def course_student(self, course_id, user_id):
+        user = self.get('courses/{}/users/{}'.format(course_id, user_id))
+        return user
 
     def group_categories(self, course_id):
         return self.get('courses/{}/group_categories'.format(course_id))
@@ -93,6 +99,6 @@ def main(args):
     output = call(url, _arg_list=args)
     print(format_json(output))
     return 0
-    
+
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))

@@ -2,6 +2,7 @@
 
 import sys
 import re
+import errno
 import urllib.request
 
 import llfuse
@@ -22,10 +23,14 @@ class CanvasFS(VFS):
         self.routes = [
             ('', self.root),
             ('courses', self.courses),
-            ('courses/:id', self.course),
-            ('courses/:id/all.json', self.course_info),
-            ('courses/:id/name', self.course_name),
-            ('courses/:id/calendar.ics', self.course_calendar),
+            ('courses/:course_id', self.course),
+            ('courses/:course_id/all.json', self.course_info),
+            ('courses/:course_id/name', self.course_name),
+            ('courses/:course_id/calendar.ics', self.course_calendar),
+            ('courses/:course_id/students', self.course_students),
+            ('courses/:course_id/students/:user_id', self.course_student),
+            ('courses/:course_id/students/:user_id/name', self.course_student_name),
+            ('courses/:course_id/students/:user_id/login_id', self.course_student_login_id),
         ]
 
     def get_contents(self, path):
@@ -56,24 +61,49 @@ class CanvasFS(VFS):
                       in self.canvas.courses()]
         return std_dir(course_ids)
 
-    def course(self, id):
+    def course(self, course_id):
         return std_dir(self.static_elements())
 
-    def course_info(self, id):
-        course = self.canvas.course(id)
+    def course_info(self, course_id):
+        course = self.canvas.course(course_id)
         data = format_json(course)
         return std_file(data)
 
-    def course_name(self, id):
-        course = self.canvas.course(id)
+    def course_name(self, course_id):
+        course = self.canvas.course(course_id)
         data = course['name'] + '\n'
         return std_file(data)
 
-    def course_calendar(self, id):
-        course = self.canvas.course(id)
+    def course_calendar(self, course_id):
+        course = self.canvas.course(course_id)
         url = course['calendar']['ics']
         with urllib.request.urlopen(url) as f:
             data = f.read()
+        return std_file(data)
+
+    def course_students(self, course_id):
+        student_ids = [str(student['id']) for student
+                       in self.canvas.all_students(course_id)]
+        return std_dir(student_ids)
+
+    def course_student(self, course_id, user_id):
+        elements = self.static_elements()
+        student = self.canvas.course_student(course_id, user_id)
+        if 'login_id' not in student:
+            elements.remove('login_id')
+        return std_dir(elements)
+
+    def course_student_name(self, course_id, user_id):
+        student = self.canvas.course_student(course_id, user_id)
+        data = student['name'] + '\n'
+        return std_file(data)
+
+    def course_student_login_id(self, course_id, user_id):
+        student = self.canvas.course_student(course_id, user_id)
+        try:
+            data = student['login_id'] + '\n'
+        except KeyError: # Permission denied (not a TA)
+            raise llfuse.FUSEError(errno.EACCES)
         return std_file(data)
 
 def main(args):
