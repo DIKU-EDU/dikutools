@@ -76,7 +76,7 @@ class CanvasFS(VFS):
         with urllib.request.urlopen(url) as f:
             data = f.read()
         return std_file(data)
-    
+
     def courses(self):
         course_ids = [str(course['id']) for course
                       in self.canvas.courses()]
