@@ -45,6 +45,9 @@ class Canvas:
     def put(self, url_relative, **args):
         return _call_api(self.token, 'PUT', self.api_base, url_relative, **args)
 
+    def delete(self, url_relative, **args):
+        return _call_api(self.token, 'DELETE', self.api_base, url_relative, **args)
+
     def courses(self):
         return self.get('courses')
 
@@ -69,6 +72,13 @@ class Canvas:
     def create_group(self, group_category_id, name):
         return self.post('group_categories/{}/groups'.format(group_category_id),
                          name=name, join_level='invitation_only')
+
+    def delete_all_assignment_groups(self, group_category_id):
+        groups = self.get('group_categories/{}/groups'.format(group_category_id),
+                          per_page=9000)
+        group_ids = [g['id'] for g in groups]
+        for gid in group_ids:
+            self.delete('groups/{}'.format(gid))
 
     def add_group_members(self, group_id, members):
         args = {

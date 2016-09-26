@@ -7,6 +7,13 @@ from canvas import *
 
 
 def main(args):
+    # Well...
+    if len(args) > 1 and args[0] == 'ABORT':
+        abort = True
+        args = args[1:]
+    else:
+        abort = False
+
     try:
         [course_id, ass_group_name, group_file] = args
     except ValueError:
@@ -14,7 +21,7 @@ def main(args):
         print('usage: group_students COURSE_ID ASSIGNMENT_GROUP_NAME GROUP_FILE',
               file=sys.stderr)
         return 1
-
+    
     with open(group_file) as f:
         groups = [line.split(' ') for line in f.read().strip().split('\n')]
 
@@ -24,6 +31,10 @@ def main(args):
                             group_cats))
     group_cat_id = group_cat['id']
 
+    if abort:
+        c.delete_all_assignment_groups(group_cat_id)
+        return 0
+    
     students = c.all_students(course_id)
 
     # Mapping from abc123 (or whatever is before @ in the KU email address) to
