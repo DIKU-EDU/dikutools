@@ -25,6 +25,25 @@ def _call_api(token, method, api_base, url_relative, **args):
         data = json.loads(f.read().decode('utf-8'))
     return data
 
+class Course:
+    def __init__(self, canvas, name):
+        self.canvas = canvas
+        self._lookup(name)
+
+    def _lookup(self, name):
+        ids = set()
+        realnames = set()
+        for course in self.canvas.courses():
+            if name.lower() in course['name'].lower():
+                ids.add(course['id'])
+                realnames.add(course['name'])
+        if len(ids) > 1:
+            raise Exception(
+                "Multiple candidates for course name \"{}\": {}".format(
+                    name, str(realnames)))
+        self.id = ids.pop()
+        self.realname = realnames.pop()
+
 class Canvas:
     def __init__(self,
                  api_base='https://absalon.ku.dk/api/v1/',
