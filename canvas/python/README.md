@@ -23,4 +23,4 @@ $ ./absalonfs absalon
 1. Bulk download of submissions is not as easy as fetching the
 `submissions_download_url` from [an assignment JSON
 object](https://canvas.instructure.com/doc/api/assignments.html#Assignment).
-There seems to be some JSON interaction going on as well.
+There seems to be some AJAX interaction going on as well.
