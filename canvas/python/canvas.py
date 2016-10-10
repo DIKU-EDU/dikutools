@@ -25,23 +25,54 @@ def _call_api(token, method, api_base, url_relative, **args):
         data = json.loads(f.read().decode('utf-8'))
     return data
 
+def _upload_submission_comment_files(token, api_base, url_relative, filepath, **args):
+    try:
+        args = args['_arg_list']
+    except KeyError:
+        pass
+    query_string = urllib.parse.urlencode(args, safe='[]@', doseq=True).encode('utf-8')
+    url = api_base + url_relative
+    headers = {
+        'Authorization': 'Bearer ' + token
+    }
+
+    print(filepaths)
+    name=basename(filepath)
+    base=splitext(name)[0]
+    h=open(filepath, "rb")
+    req = requests.post(url, headers=headers, files=(name, h))
+
+    return req.json()
+
 class Course:
     def __init__(self, canvas, name):
         self.canvas = canvas
         self._lookup(name)
 
     def _lookup(self, name):
-        ids = set()
+        course_id = None
         realnames = set()
-        for course in self.canvas.courses():
+        courses = self.canvas.courses()
+
+        ppnames = lambda names: "\"{}\"".format("\", \"".join(names))
+
+        for course in courses:
             if name.lower() in course['name'].lower():
-                ids.add(course['id'])
+                course_id = course['id']
                 realnames.add(course['name'])
-        if len(ids) > 1:
+
+        if len(realnames) > 1:
             raise LookupError(
-                "Multiple candidate courses \"{}\": \"{}\".".format(
-                    name, "\", \"".join(list(realnames))))
-        self.id = ids.pop()
+                "Multiple candidate courses \"{}\": {}.".format(
+                    name, ppnames(list(realnames))))
+
+        if len(realnames) == 0:
+            all_names = [course['name'] for course in courses]
+            raise LookupError(
+                "No candidate course with the name \"{}\". Your courses include {}.".format(
+                    name, ppnames(all_names)))
+
+        self.id = course_id
         self.realname = realnames.pop()
 
 class Canvas:
