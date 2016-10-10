@@ -44,36 +44,44 @@ def _upload_submission_comment_files(token, api_base, url_relative, filepath, **
 
     return req.json()
 
+def _lookup_name(self, name, entities):
+    id = None
+    displaynames = set()
+
+    ppnames = lambda names: "\"{}\"".format("\", \"".join(names))
+
+    for entity in entities:
+        if name.lower() in entity['name'].lower():
+            id = entity['id']
+            displaynames.add(entity['name'])
+
+    if len(displaynames) > 1:
+        raise LookupError(
+            "Multiple candidates for \"{}\": {}.".format(
+                name, ppnames(list(displaynames))))
+
+    if len(displaynames) == 0:
+        all_names = [entity['name'] for entity in entities]
+        raise LookupError(
+            "No candidate for \"{}\". Your options include {}.".format(
+                name, ppnames(all_names)))
+
+    return (id, displaynames.pop())
+
 class Course:
     def __init__(self, canvas, name):
         self.canvas = canvas
-        self._lookup(name)
 
-    def _lookup(self, name):
-        course_id = None
-        realnames = set()
-        courses = self.canvas.courses()
+        entities = self.canvas.courses()
+        self.id, self.displayname = _lookup_name(self, name, entities)
 
-        ppnames = lambda names: "\"{}\"".format("\", \"".join(names))
+class Assignment:
+    def __init__(self, canvas, course, name):
+        self.canvas = canvas
+        self.course = course
 
-        for course in courses:
-            if name.lower() in course['name'].lower():
-                course_id = course['id']
-                realnames.add(course['name'])
-
-        if len(realnames) > 1:
-            raise LookupError(
-                "Multiple candidate courses \"{}\": {}.".format(
-                    name, ppnames(list(realnames))))
-
-        if len(realnames) == 0:
-            all_names = [course['name'] for course in courses]
-            raise LookupError(
-                "No candidate course with the name \"{}\". Your courses include {}.".format(
-                    name, ppnames(all_names)))
-
-        self.id = course_id
-        self.realname = realnames.pop()
+        entities = self.canvas.list_assignments(self.course.id)
+        self.id, self.displayname = _lookup_name(self, name, entities)
 
 class Canvas:
     def __init__(self,
