@@ -86,6 +86,18 @@ class Canvas:
         }
         return self.put('groups/{}'.format(group_id), **args)
 
+    def list_assignments(self, course_id):
+        return self.get('courses/{}/assignments'.format(course_id))
+
+    def assignment(self, course_id, assignment_id):
+        return self.get(
+            'courses/{}/assignments/{}'.format(
+                course_id, assignment_id))
+
+    def submissions_download_url(self, course_id, assignment_id, dest):
+        return self.assignment(
+            course_id, assignment_id)['submissions_download_url']
+
 def main(args):
     try:
         method = args[0].upper()
