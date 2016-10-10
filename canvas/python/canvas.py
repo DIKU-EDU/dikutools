@@ -38,9 +38,9 @@ class Course:
                 ids.add(course['id'])
                 realnames.add(course['name'])
         if len(ids) > 1:
-            raise Exception(
-                "Multiple candidates for course name \"{}\": {}".format(
-                    name, str(realnames)))
+            raise LookupError(
+                "Multiple candidate courses \"{}\": \"{}\".".format(
+                    name, "\", \"".join(list(realnames))))
         self.id = ids.pop()
         self.realname = realnames.pop()
 
