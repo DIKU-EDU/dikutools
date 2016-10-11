@@ -24,3 +24,8 @@ $ ./absalonfs absalon
 `submissions_download_url` from [an assignment JSON
 object](https://canvas.instructure.com/doc/api/assignments.html#Assignment).
 There seems to be some AJAX interaction going on as well.
+
+2. [Upload via
+POST](https://canvas.instructure.com/doc/api/file.file_uploads.html#method.file_uploads.post)
+fails because in Step 2, Canvas does not provide an `Expires` field among their
+`upload_params`, while AWS demands it.
