@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 
+import json
+import os
+import requests
 import sys
+import time
 import urllib.parse
 import urllib.request
-import json
 
+from os.path import basename
 
 def format_json(d):
     return json.dumps(d, sort_keys=True, indent=2, ensure_ascii=False)
@@ -25,24 +29,69 @@ def _call_api(token, method, api_base, url_relative, **args):
         data = json.loads(f.read().decode('utf-8'))
     return data
 
-def _upload_submission_comment_files(token, api_base, url_relative, filepath, **args):
-    try:
-        args = args['_arg_list']
-    except KeyError:
-        pass
-    query_string = urllib.parse.urlencode(args, safe='[]@', doseq=True).encode('utf-8')
+def _upload_via_post(token, api_base, url_relative, filepath):
+
     url = api_base + url_relative
     headers = {
         'Authorization': 'Bearer ' + token
     }
 
-    print(filepaths)
-    name=basename(filepath)
-    base=splitext(name)[0]
-    h=open(filepath, "rb")
-    req = requests.post(url, headers=headers, files=(name, h))
+    name = basename(filepath)
+    size = os.stat(filepath).st_size
 
-    return req.json()
+    params = {
+        'name'    : name,
+        'size'    : size
+    }
+
+    resp = requests.post(url, headers=headers, params=params)
+
+    json = resp.json()
+    upload_url = json['upload_url']
+    params = json['upload_params']
+    name = json['file_param']
+
+    with open(filepath, "rb") as f:
+        resp = requests.post(
+            upload_url, params=params, files=[(name, f)])
+
+    print(resp.status_code)
+    print(resp.text)
+
+    return resp
+
+def _upload_via_url(token, api_base, url_relative, filepath, viaurl):
+
+    url = api_base + url_relative
+    headers = {
+        'Authorization': 'Bearer ' + token
+    }
+
+    name = basename(filepath)
+    size = os.stat(filepath).st_size
+
+    params = {
+        'url'     : viaurl,
+        'name'    : name,
+        'size'    : size
+    }
+
+    resp = requests.post(url, headers=headers, params=params)
+
+    json = resp.json()
+
+    id = json['id']
+    status_url = json['status_url']
+
+    while json['upload_status'] != 'ready':
+      print("Waiting...")
+      time.sleep(3)
+      json = requests.get(status_url, headers=headers).json()
+
+    attachment = json['attachment']
+    print(attachment)
+
+    return attachment['id']
 
 def _lookup_name(self, name, entities):
     id = None
@@ -155,6 +204,24 @@ class Canvas:
     def submissions_download_url(self, course_id, assignment_id, dest):
         return self.assignment(
             course_id, assignment_id)['submissions_download_url']
+
+    def give_feedback(self, course_id, assignment_id, user_id,
+            filepath, grade = "incomplete", text_comment="See attached files."):
+        url_relative = \
+            'courses/{}/assignments/{}/submissions/{}'.format(
+                course_id, assignment_id, user_id)
+        id = _upload_via_url(
+            self.token, self.api_base,
+            url_relative + "/comments/files",
+            filepath, 'https://onlineta.org/@oleks/feedback.txt')
+        _arg_list = {
+            "comment[text_comment]" : text_comment,
+            "comment[group_comment]" : True,
+            "comment[file_ids][]" : id,
+            "submission[posted_grade]" : grade
+        }
+
+        return self.put(url_relative, _arg_list=_arg_list)
 
 def main(args):
     try:
