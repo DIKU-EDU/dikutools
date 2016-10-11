@@ -7,6 +7,7 @@ import sys
 import time
 import urllib.parse
 import urllib.request
+import re
 
 from os.path import basename
 
@@ -59,6 +60,19 @@ def _upload_via_post(token, api_base, url_relative, filepath):
     print(resp.text)
 
     return resp
+
+def _upload_transit(filepath):
+    html = requests.get("http://file-transit.appspot.com/").text
+    m = re.search('action="(.*?)"', html)
+    form_url = m.group(1)
+
+    with open(filepath, "rb") as f:
+        resp = requests.post(
+            form_url, files=[('file', f)])
+    if resp.status_code != 200:
+        raise Exception("Something is wrong with the file-transit service :-( " + resp.headers)
+
+    return resp.url
 
 def _upload_via_url(token, api_base, url_relative, filepath, viaurl):
 
@@ -210,10 +224,11 @@ class Canvas:
         url_relative = \
             'courses/{}/assignments/{}/submissions/{}'.format(
                 course_id, assignment_id, user_id)
+        viaurl = _upload_transit(filepath)
         id = _upload_via_url(
             self.token, self.api_base,
             url_relative + "/comments/files",
-            filepath, 'https://onlineta.org/@oleks/feedback.txt')
+            filepath, viaurl)
         _arg_list = {
             "comment[text_comment]" : text_comment,
             "comment[group_comment]" : True,
