@@ -194,6 +194,9 @@ class Assignment(NamedEntity):
             'courses/{}/assignments/{}/submissions?per_page=9000'.format(
             self.course.id, self.id))
 
+    def submissions_download_url(self):
+        return self.canvas.submissions_download_url(self.course.id, self.id)
+
     def give_feedback(self, submission_id, grade, filepaths):
         self.canvas.give_feedback(
           self.course.id, self.course.displayname,
@@ -271,7 +274,7 @@ class Canvas:
             'courses/{}/assignments/{}'.format(
                 course_id, assignment_id))
 
-    def submissions_download_url(self, course_id, assignment_id, dest):
+    def submissions_download_url(self, course_id, assignment_id):
         return self.assignment(
             course_id, assignment_id)['submissions_download_url']
 
