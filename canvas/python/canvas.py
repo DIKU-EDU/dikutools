@@ -178,6 +178,9 @@ class Course(NamedEntity):
         entities = self.canvas.courses()
         NamedEntity.__init__(self, entities, name, id)
 
+    def assignment(self, name = None, id = None):
+        return Assignment(self.canvas, self, name, id)
+
 class Assignment(NamedEntity):
     def __init__(self, canvas, course, name = None, id = None):
         self.canvas = canvas
@@ -219,10 +222,13 @@ class Canvas:
     def delete(self, url_relative, **args):
         return _call_api(self.token, 'DELETE', self.api_base, url_relative, **args)
 
+    def course(self, name = None, id = None):
+        return Course(self, name, id)
+
     def courses(self):
         return self.get('courses')
 
-    def course(self, course_id):
+    def get_course(self, course_id):
         return self.get('courses/{}'.format(course_id))
 
     def all_students(self, course_id):
