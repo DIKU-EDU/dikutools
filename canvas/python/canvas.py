@@ -115,44 +115,81 @@ def _upload_submission_comment_file(token, api_base, url_relative, course, filep
         url_relative + "/comments/files",
         filepath, viaurl)
 
-def _lookup_name(self, name, entities):
-    id = None
-    displaynames = set()
+def _ppnames(names):
+    return "\"{}\"".format("\", \"".join(names))
 
-    ppnames = lambda names: "\"{}\"".format("\", \"".join(names))
+def _raise_lookup_error(key, attr, entities):
+    all_names = [entity[attr] for entity in entities]
+    raise LookupError(
+        "No candidate for \"{}\". Your options include {}.".format(
+        key, _ppnames(all_names)))
+
+def _lookup_id(id, entities):
+    for entity in entities:
+        if entity['id'] == id:
+            return entity
+
+    ids = ["{} ({})".format(entity['id'], entity['name'])
+        for entity in entities]
+    raise LookupError(
+        "No candidate for {}. Your options include {}.".format(
+        id, ", ".join(ids)))
+
+def _lookup_name(name, entities):
+    id = None
+    matches = []
 
     for entity in entities:
         if name.lower() in entity['name'].lower():
-            id = entity['id']
-            displaynames.add(entity['name'])
+            matches.append(entity)
 
-    if len(displaynames) > 1:
+    if len(matches) > 1:
+        matching_names = [match['name'] for match in matches]
         raise LookupError(
             "Multiple candidates for \"{}\": {}.".format(
-                name, ppnames(list(displaynames))))
+                name, _ppnames(matching_names)))
 
-    if len(displaynames) == 0:
-        all_names = [entity['name'] for entity in entities]
+    if len(matches) == 0:
+        all_names = [entity[attr] for entity in entities]
         raise LookupError(
             "No candidate for \"{}\". Your options include {}.".format(
-                name, ppnames(all_names)))
+            key, _ppnames(all_names)))
 
-    return (id, displaynames.pop())
+    return matches[0]
 
-class Course:
-    def __init__(self, canvas, name):
+class NamedEntity:
+    def __init__(self, entities, name = None, id = None):
+        if name != None:
+            self.json = _lookup_name(name, entities)
+        elif id != None:
+            self.json = _lookup_id(id, entities)
+        else:
+            raise LookupError(
+                "For me to find a course, you must provide a name or id.")
+
+        self.id = self.json['id']
+        self.displayname = self.json['name']
+
+
+class Course(NamedEntity):
+    def __init__(self, canvas, name = None, id = None):
         self.canvas = canvas
 
         entities = self.canvas.courses()
-        self.id, self.displayname = _lookup_name(self, name, entities)
+        NamedEntity.__init__(self, entities, name, id)
 
-class Assignment:
-    def __init__(self, canvas, course, name):
+class Assignment(NamedEntity):
+    def __init__(self, canvas, course, name = None, id = None):
         self.canvas = canvas
         self.course = course
 
         entities = self.canvas.list_assignments(self.course.id)
-        self.id, self.displayname = _lookup_name(self, name, entities)
+        NamedEntity.__init__(self, entities, name, id)
+
+    def submissions(self):
+        return self.canvas.get(
+            'courses/{}/assignments/{}/submissions?per_page=9000'.format(
+            self.course.id, self.id))
 
     def give_feedback(self, submission_id, grade, filepaths):
         self.canvas.give_feedback(
@@ -161,8 +198,8 @@ class Assignment:
 
 class Canvas:
     def __init__(self,
-                 api_base='https://absalon.ku.dk/api/v1/',
-                 token=None):
+                 token=None,
+                 api_base='https://absalon.ku.dk/api/v1/'):
         self.api_base = api_base
 
         if token is None:
