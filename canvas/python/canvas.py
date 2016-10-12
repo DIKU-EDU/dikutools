@@ -7,7 +7,6 @@ import sys
 import time
 import urllib.parse
 import urllib.request
-import re
 
 from os.path import basename
 
@@ -61,16 +60,17 @@ def _upload_via_post(token, api_base, url_relative, filepath):
 
     return resp
 
-def _upload_transit(filepath):
-    html = requests.get("http://file-transit.appspot.com/").text
-    m = re.search('action="(.*?)"', html)
-    form_url = m.group(1)
-
+def _upload_transit(course, filepath):
+    form_url = "https://file-transit.appspot.com/upload"
     with open(filepath, "rb") as f:
         resp = requests.post(
-            form_url, files=[('file', f)])
+            form_url, files=[('course', course), ('file', f)])
     if resp.status_code != 200:
-        raise Exception("Something is wrong with the file-transit service :-( " + resp.headers)
+        raise Exception(
+            "Something is wrong with the file-transit service :-( " +
+                resp.headers)
+
+    print("Uploaded {} as {}..".format(filepath, resp.url))
 
     return resp.url
 
@@ -98,14 +98,22 @@ def _upload_via_url(token, api_base, url_relative, filepath, viaurl):
     status_url = json['status_url']
 
     while json['upload_status'] != 'ready':
-      print("Waiting...")
+      print("Waiting for Canvas to download it..")
       time.sleep(3)
       json = requests.get(status_url, headers=headers).json()
 
+    print("Canvas got it!")
+
     attachment = json['attachment']
-    print(attachment)
 
     return attachment['id']
+
+def _upload_submission_comment_file(token, api_base, url_relative, course, filepath):
+    viaurl = _upload_transit(course, filepath)
+    return _upload_via_url(
+        token, api_base,
+        url_relative + "/comments/files",
+        filepath, viaurl)
 
 def _lookup_name(self, name, entities):
     id = None
@@ -145,6 +153,11 @@ class Assignment:
 
         entities = self.canvas.list_assignments(self.course.id)
         self.id, self.displayname = _lookup_name(self, name, entities)
+
+    def give_feedback(self, submission_id, grade, filepaths):
+        self.canvas.give_feedback(
+          self.course.id, self.course.displayname,
+          self.id, submission_id, grade, filepaths)
 
 class Canvas:
     def __init__(self,
@@ -219,20 +232,20 @@ class Canvas:
         return self.assignment(
             course_id, assignment_id)['submissions_download_url']
 
-    def give_feedback(self, course_id, assignment_id, user_id,
-            filepath, grade = "incomplete", text_comment="See attached files."):
+    def give_feedback(self,
+            course_id, course_name, assignment_id, user_id, grade, filepaths):
+
         url_relative = \
             'courses/{}/assignments/{}/submissions/{}'.format(
                 course_id, assignment_id, user_id)
-        viaurl = _upload_transit(filepath)
-        id = _upload_via_url(
-            self.token, self.api_base,
-            url_relative + "/comments/files",
-            filepath, viaurl)
+
+        upload = lambda filepath : _upload_submission_comment_file(
+            self.token, self.api_base, url_relative, course_name, filepath)
+        ids = list(map(upload, filepaths))
+
         _arg_list = {
-            "comment[text_comment]" : text_comment,
             "comment[group_comment]" : True,
-            "comment[file_ids][]" : id,
+            "comment[file_ids][]" : ids,
             "submission[posted_grade]" : grade
         }
 
