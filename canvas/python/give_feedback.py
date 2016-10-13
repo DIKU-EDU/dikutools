@@ -41,9 +41,12 @@ def _find_student_id(subdir):
 def _check_grade(grade):
   goodgrades = ["pass", "fail", "complete", "incomplete"]
   if not grade in goodgrades:
-    print("\"{}\" is a bad grade. Acceptable grades are: {}.".format(
-      grade, ", ".join(goodgrades)))
-    sys.exit(1)
+    try:
+      x = int(grade)
+    except ValueError:
+      print("\"{}\" is a bad grade. Acceptable grades are: {}.".format(
+        grade, ", ".join(goodgrades)))
+      sys.exit(1)
   return grade
 
 def _check_filepaths(filepaths):
