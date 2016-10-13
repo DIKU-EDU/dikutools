@@ -70,7 +70,7 @@ def _upload_transit(course, filepath):
             "Something is wrong with the file-transit service :-( " +
                 resp.headers)
 
-    print("Uploaded {} as {}..".format(filepath, resp.url))
+    print("Transitting {} to Canvas via {}".format(filepath, resp.url))
 
     return resp.url
 
@@ -295,7 +295,15 @@ class Canvas:
             "submission[posted_grade]" : grade
         }
 
-        return self.put(url_relative, _arg_list=_arg_list)
+        resp = self.put(url_relative, _arg_list=_arg_list)
+        if not 'grade' in resp:
+          raise Exception("Canvas response looks weird: {}".format(resp))
+
+
+        speedgrader_url = "https://absalon.ku.dk/courses/{}/gradebook/speed_grader?assignment_id={}#%7B%22student_id%22%3A%22{}%22%7D".format(course_id, assignment_id, user_id)
+
+        print("Looks good.\nVerification URL: " + speedgrader_url)
+        return resp
 
 def main(args):
     try:
