@@ -56,16 +56,27 @@ def _check_filepaths(filepaths):
       sys.exit(1)
   return filepaths
 
+def find_upper_canvas_dir(parent):
+  for i in range(5):
+    parent = os.path.join("..", parent)
+    if os.path.isfile(os.path.join(parent, "canvas.yaml")):
+      return parent
+  raise LookupError("Couldn't locate a canvas.yaml.")
+
 def get_assignment():
-  with open(os.path.join("..", "canvas.yaml"), "r") as f:
+  assignment_dir = find_upper_canvas_dir(".")
+
+  with open(os.path.join(assignment_dir, "canvas.yaml"), "r") as f:
     conf = yaml.load(f)
   assignment_id = conf['assignment_id']
 
-  with open(os.path.join("..", "..", "canvas.yaml"), "r") as f:
+  course_dir = find_upper_canvas_dir(assignment_dir)
+
+  with open(os.path.join(course_dir, "canvas.yaml"), "r") as f:
     conf = yaml.load(f)
   course_id = conf['course_id']
 
-  with open(os.path.join("..", "..", "token"), "r") as f:
+  with open(os.path.join(course_dir, "token"), "r") as f:
     api_token = f.read().strip()
 
   assignment = Canvas(api_token).course(
