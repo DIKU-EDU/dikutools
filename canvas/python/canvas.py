@@ -62,9 +62,12 @@ def _upload_via_post(token, api_base, url_relative, filepath):
 
 def _upload_transit(course, filepath):
     form_url = "https://file-transit.appspot.com/upload"
+    params = {
+        'course': course
+    }
     with open(filepath, "rb") as f:
         resp = requests.post(
-            form_url, files=[('course', course), ('file', f)])
+            form_url, params=params, files=[('file', f)])
     if resp.status_code != 200:
         raise Exception(
             "Something is wrong with the file-transit service :-( " +
