@@ -293,6 +293,7 @@ class Canvas:
         ids = list(map(upload, filepaths))
 
         _arg_list = {
+            "comment[text_comment]" : 'See attached files.',
             "comment[group_comment]" : True,
             "comment[file_ids][]" : ids,
             "submission[posted_grade]" : grade
