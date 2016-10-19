@@ -1,3 +1,7 @@
+# DEPRECATED
+
+See [Staffeli](https://github.com/DIKU-EDU/Staffeli).
+
 ## Token
 
 Generér en token på https://absalon.instructure.com/profile/settings og
