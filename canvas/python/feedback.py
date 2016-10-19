@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, os.path, sys, yaml
+import json, os, os.path, sys, yaml
 
 from canvas import Canvas
 
@@ -27,6 +27,14 @@ def _check_subdir(subdir):
 def _exit_badpath():
   print("Please give a path to a directory containing a student submission.")
   sys.exit(1)
+
+def _find_student_ids(subdir):
+  jsonpath = os.path.join(subdir, "canvas_group.json")
+  if os.path.isfile(jsonpath):
+    with open(jsonpath, "r") as f:
+      return json.load(f)
+  else:
+    return [_find_student_id(subdir)]
 
 def _find_student_id(subdir):
   for filename in os.listdir(subdir):
@@ -89,8 +97,9 @@ def subdir_feedback(assignment, subdir, grade, filepaths):
   grade = _check_grade(grade)
   filepaths = _check_filepaths(filepaths)
 
-  student_id = _find_student_id(subdir)
-  assignment.give_feedback(student_id, grade, filepaths)
+  student_ids = _find_student_ids(subdir)
+  for student_id in student_ids:
+    assignment.give_feedback(student_id, grade, filepaths)
 
 def main():
   assignment = get_assignment()
